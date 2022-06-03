@@ -35,7 +35,7 @@ beforeAll(async () => {
 	utils.initTestLogger();
 
 	isSmtpAvailable = await utils.isTestSmtpServiceAvailable();
-});
+}, SMTP_TEST_TIMEOUT);
 
 beforeEach(async () => {
 	await testDb.truncate(['User'], testDbName);
@@ -44,7 +44,7 @@ beforeEach(async () => {
 
 	config.set('userManagement.isInstanceOwnerSetUp', true);
 	config.set('userManagement.emails.mode', '');
-});
+}, 10000);
 
 afterAll(async () => {
 	await testDb.terminate(testDbName);
