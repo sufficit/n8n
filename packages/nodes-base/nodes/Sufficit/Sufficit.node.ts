@@ -13,7 +13,7 @@ import {
 	OptionsWithUri,
 } from 'request';
 
-export class FriendGrid implements INodeType {
+export class Sufficit implements INodeType {
 	description: INodeTypeDescription = {
 			displayName: 'Sufficit',
 			name: 'sufficit',
