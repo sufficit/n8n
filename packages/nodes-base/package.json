@@ -633,6 +633,7 @@
       "dist/nodes/Stripe/Stripe.node.js",
       "dist/nodes/Stripe/StripeTrigger.node.js",
       "dist/nodes/Supabase/Supabase.node.js",
+      "dist/nodes/Sufficit/Sufficit.node.js",
       "dist/nodes/SurveyMonkey/SurveyMonkeyTrigger.node.js",
       "dist/nodes/Switch/Switch.node.js",
       "dist/nodes/SyncroMSP/SyncroMsp.node.js",
