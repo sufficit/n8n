@@ -137,7 +137,7 @@ async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | 
 	if (authentication === 'basicAuth') {
 		const credentials = await this.getCredentials('sufficitBasicAuthApi') as Sufficit.BasicAuthCredentials;
 		const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
-		const response = await this.helpers?.request(options) as Sufficit.IdentityTokenReponse;
+		const response = await this.helpers.request(options);
 		return response.access_token;
 	} else {
 		const credentials = await this.getCredentials('sufficitTokenAuthApi') as Sufficit.TokenAuthCredentials;
