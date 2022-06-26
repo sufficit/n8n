@@ -81,7 +81,7 @@ export function validateJSON(json: string | undefined): any { // tslint:disable-
 	return result;
 }
 
-async function getAccessToken(this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions): Promise<IDataObject> {
+async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | IExecuteSingleFunctions): Promise<IDataObject> {
 	const credentials = await this.getCredentials('sufficitApi');
 	const options: OptionsWithUri = {
 		headers: {
