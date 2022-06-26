@@ -57,7 +57,7 @@ export async function sufficitApiRequest(
 			delete options.body;
 		}
 
-		const { access_token } = await getAccessToken.call(this);
+		const access_token = await getAccessToken.call(this);
 		options.headers!.Authorization = `Bearer ${access_token}`;
 
 		query = query || {};

@@ -159,6 +159,8 @@ export class Sufficit implements INodeType {
 						});
 
 					}
+				} else {
+					responseData = {}
 				}
 
 				Array.isArray(responseData)
