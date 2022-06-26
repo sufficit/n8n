@@ -8,7 +8,7 @@ import {
 
 export class SufficitApi implements ICredentialType {
 	name = 'sufficitApi';
-	displayName = 'Sufficit EndPoints API';
+	displayName = 'Sufficit EndPoints API Token';
 	documentationUrl = 'sufficit';
 	properties: INodeProperties[] = [
 		{

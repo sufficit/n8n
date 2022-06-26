@@ -10,14 +10,16 @@ const identityClient = 'SufficitEndPoints';
 const identityBaseUrl = 'https://identity.sufficit.com.br';
 const identityTokenEndPoint = '/connect/token';
 
+import jwt from 'jsonwebtoken';
 export class SufficitEndPointsTokenRequest implements ICredentialType {
-	name = 'sufficitEndPointsTokenRequest';
-	displayName = 'Sufficit EndPoints Token Request';
+	name = 'sufficitApi';
+	displayName = 'Sufficit EndPoints Token Request (43)';
 	documentationUrl = 'sufficit';
 	properties: INodeProperties[] = [
 		{
-			displayName: 'User',
+			displayName: 'User E-Mail',
 			name: 'user',
+			placeholder: 'name@email.com',
 			type: 'string',
 			default: '',
 		},
@@ -25,26 +27,31 @@ export class SufficitEndPointsTokenRequest implements ICredentialType {
 			displayName: 'Password',
 			name: 'password',
 			type: 'string',
+			typeOptions: {
+				password: true,
+			},
 			default: '',
 		},
 	];
+
 	async authenticate(credentials: ICredentialDataDecryptedObject, requestOptions: IHttpRequestOptions): Promise<IHttpRequestOptions> {
-		requestOptions.auth = {
-			username: identityClient as string,
-			password: '',
+			const token = jwt.sign({}, Buffer.from('', 'hex'), {
+			keyid: identityClient,
+			algorithm: 'HS256',
+			expiresIn: '5m',
+		});
+
+		requestOptions.headers = {
+			...requestOptions.headers,
+			Authorization: `Bearer ${token}`,
 		};
 		return requestOptions;
 	}
+
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: identityBaseUrl as string,
-			url: identityTokenEndPoint as string,
-			body: {
-				grant_type: "password",
-				username: "{{$credentials.user}}",
-				password: "{{$credentials.password}}",
-				scope: "directives",
-			}
+			baseURL: 'https://identity.sufficit.com.br',
+			url: '/connect/token',
 		},
 	};
 }
