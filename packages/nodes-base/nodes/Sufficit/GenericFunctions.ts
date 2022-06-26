@@ -1,7 +1,6 @@
 import {
 	IExecuteFunctions,
 	IExecuteSingleFunctions,
-	IHookFunctions,
 	ILoadOptionsFunctions,
 } from 'n8n-core';
 
@@ -23,7 +22,7 @@ import moment from 'moment-timezone';
 import jwt from 'jsonwebtoken';
 
 export async function sufficitApiRequest(
-	this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions,
+	this: ILoadOptionsFunctions | IExecuteFunctions | IExecuteSingleFunctions,
 	method: string,
 	endpoint: string,
 	body: object,
