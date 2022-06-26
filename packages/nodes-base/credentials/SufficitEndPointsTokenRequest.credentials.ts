@@ -31,6 +31,7 @@ export class SufficitEndPointsTokenRequest implements ICredentialType {
 	async authenticate(credentials: ICredentialDataDecryptedObject, requestOptions: IHttpRequestOptions): Promise<IHttpRequestOptions> {
 		requestOptions.auth = {
 			username: identityClient as string,
+			password: '',
 		};
 		return requestOptions;
 	}
