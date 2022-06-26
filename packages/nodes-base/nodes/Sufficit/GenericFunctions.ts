@@ -120,13 +120,7 @@ export function validateJSON(json: string | undefined): any { // tslint:disable-
 	return result;
 }
 
-export async function getAccessTokenFromBasic(this: ICredentialTestFunctions, credentials: Sufficit.BasicAuthCredentials){
-	const options = requestToken(credentials!.username as string, credentials!.password as string);
-	const response = await this.helpers.request(options) as Sufficit.IdentityTokenReponse;
-	return response.access_token;
-}
-
-export async function validateAccessToken(this: ICredentialTestFunctions, credentials: Sufficit.TokenAuthCredentials){
+export function requestUserInfo(credentials: Sufficit.Credentials){
 	const options: OptionsWithUri = {
 		method: 'GET',
 		uri: `${Identity.baseUrl}${Identity.userInfoEndpoint}`,
@@ -135,15 +129,14 @@ export async function validateAccessToken(this: ICredentialTestFunctions, creden
 			Authorization: `Bearer ${credentials.accessToken}`,
 		},
 	};
-
-	return this.helpers.request(options) as Sufficit.IdentityTokenReponse;
+	return options;
 }
 
-export async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | IExecuteSingleFunctions): Promise<IDataObject> {
+export async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | IExecuteSingleFunctions): Promise<string> {
 	const authentication = this.getNodeParameter('authentication', 0) as 'basicAuth' | 'tokenAuth';
 	if (authentication === 'basicAuth') {
 		const credentials = await this.getCredentials('sufficitBasicAuthApi') as Sufficit.BasicAuthCredentials;
-		const options = requestToken(credentials!.username as string, credentials!.password as string);
+		const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
 		const response = await this.helpers.request(options) as Sufficit.IdentityTokenReponse;
 		return response.access_token;
 	} else {
@@ -152,7 +145,7 @@ export async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunct
 	}
 }
 
-function requestToken(username: string, password: string){
+export function requestAccessToken(username: string, password: string){
 	const options: OptionsWithUri = {
 		auth:{
 			user: Identity.clientName as string,

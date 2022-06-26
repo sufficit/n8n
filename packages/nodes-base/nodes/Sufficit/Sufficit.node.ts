@@ -27,9 +27,8 @@ import {
 } from './descriptions';
 
 import {
-	getAccessToken,
-	getAccessTokenFromBasic,
-	validateAccessToken,
+	requestAccessToken,
+	requestUserInfo,
 	sufficitApiRequest,
 	sufficitApiRequestAllItems,
 } from './GenericFunctions';
@@ -184,8 +183,9 @@ export class Sufficit implements INodeType {
 				credential: ICredentialsDecrypted,
 			): Promise<INodeCredentialTestResult> {
 				const credentials = credential.data as Types.BasicAuthCredentials;
+				const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
 				try {
-					await getAccessTokenFromBasic(this, credentials);
+					await this.helpers.request(options) as Types.IdentityTokenReponse;
 					return {
 						status: 'OK',
 						message: 'Authentication successful',
@@ -203,8 +203,9 @@ export class Sufficit implements INodeType {
 				credential: ICredentialsDecrypted,
 			): Promise<INodeCredentialTestResult> {
 				const credentials = credential.data as Types.TokenAuthCredentials;
+				const options = requestUserInfo(credentials)
 				try {
-					await validateAccessToken(this, credentials);
+					await this.helpers.request(options);
 					return {
 						status: 'OK',
 						message: 'Authentication successful',
