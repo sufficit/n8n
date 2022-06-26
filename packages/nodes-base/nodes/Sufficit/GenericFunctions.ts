@@ -83,9 +83,12 @@ export function validateJSON(json: string | undefined): any { // tslint:disable-
 async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | IExecuteSingleFunctions): Promise<IDataObject> {
 	const credentials = await this.getCredentials('sufficitApi');
 	const options: OptionsWithUri = {
+		auth:{
+			user: 'SufficitEndPoints',
+			pass: '',
+		},
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',
-			'Authorization': `Basic ${Buffer.from('SufficitEndPoints', 'hex')}`,
 		},
 		method: 'POST',
 		form: {

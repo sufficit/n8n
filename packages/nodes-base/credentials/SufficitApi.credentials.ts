@@ -6,8 +6,8 @@ import {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class SufficitApi implements ICredentialType {
-	name = 'sufficitApi';
+export class SufficitApiToken implements ICredentialType {
+	name = 'sufficitApiToken';
 	displayName = 'Sufficit EndPoints API Token';
 	documentationUrl = 'sufficit';
 	properties: INodeProperties[] = [

@@ -15,6 +15,13 @@ import {
 } from './ContactDescription';
 
 import {
+	groupDescription,
+	organizationDescription,
+	ticketDescription,
+	userDescription,
+} from './descriptions';
+
+import {
 	OptionsWithUri,
 } from 'request';
 

@@ -14,7 +14,6 @@ const identityClient = 'SufficitEndPoints';
 const identityBaseUrl = 'https://identity.sufficit.com.br';
 const identityTokenEndPoint = '/connect/token';
 
-import jwt from 'jsonwebtoken';
 export class SufficitEndPointsTokenRequest implements ICredentialType {
 	name = 'sufficitApi';
 	displayName = 'Sufficit EndPoints Token Request (43)';
@@ -40,9 +39,12 @@ export class SufficitEndPointsTokenRequest implements ICredentialType {
 
 	async authenticate(credentials: ICredentialDataDecryptedObject, requestOptions: IHttpRequestOptions): Promise<IHttpRequestOptions> {
 		const options: OptionsWithUri = {
+			auth:{
+				user: 'SufficitEndPoints',
+				pass: '',
+			},
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
-				'Authorization': `Basic ${Buffer.from('SufficitEndPoints', 'hex')}`,
 			},
 			method: 'POST',
 			form: {
