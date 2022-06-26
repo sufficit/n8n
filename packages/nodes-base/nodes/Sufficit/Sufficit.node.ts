@@ -135,8 +135,8 @@ export class Sufficit implements INodeType {
 
 				const options: OptionsWithUri = {
 					auth:{
-						user: Identity.clientName,
-						pass: '',
+						user: Identity.clientName as string,
+						pass: '' as string,
 					},
 					headers: {
 						'Content-Type': 'application/x-www-form-urlencoded',
@@ -144,8 +144,8 @@ export class Sufficit implements INodeType {
 					method: 'POST',
 					form: {
 						grant_type: 'password',
-						username: credentials.username,
-						password: credentials.password,
+						username: credentials!.username as string,
+						password: credentials!.password as string,
 						scope: 'directives',
 					},
 					uri: `${Identity.baseUrl}${Identity.tokenEndpoint}`,
