@@ -3,7 +3,8 @@ import {
 } from 'n8n-workflow';
 
 export declare namespace Sufficit {
-	export type Resource = 'group' | 'organization' | 'ticket' | 'user';
+
+	export type Resource = 'contact' | 'group' | 'organization' | 'ticket' | 'user';
 
 	export type AuthMethod = 'basicAuth' | 'tokenAuth';
 
@@ -22,6 +23,13 @@ export declare namespace Sufficit {
 	export type TokenAuthCredentials = CredentialsBase & {
 		authType: 'tokenAuth';
 	};
+
+	export type IdentityTokenReponse = {
+		access_token: string;
+		expires_in: number;
+		token_type: string;
+		scope: string;
+	}
 
 	export type UserAdditionalFields = IDataObject & Sufficit.CustomFieldsUi & Sufficit.AddressUi;
 	export type UserUpdateFields = UserAdditionalFields;

@@ -27,17 +27,16 @@ import {
 } from './descriptions';
 
 import {
-	OptionsWithUri,
-} from 'request';
+	getAccessToken,
+	getAccessTokenFromBasic,
+	validateAccessToken,
+	sufficitApiRequest,
+	sufficitApiRequestAllItems,
+} from './GenericFunctions';
 
-import type { Sufficit as SufficitTypes } from './types';
+import type { Sufficit as Types } from './types';
 
-const Identity = {
-	baseUrl: 'https://identity.sufficit.com.br',
-	tokenEndpoint: '/connect/token',
-	userInfoEndpoint: '/connect/userinfo',
-	clientName: 'SufficitEndPoints',
-}
+
 
 export class Sufficit implements INodeType {
 	description: INodeTypeDescription = {
@@ -122,7 +121,60 @@ export class Sufficit implements INodeType {
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
-			return [[]];
+		const items = this.getInputData();
+
+		const resource = this.getNodeParameter('resource', 0) as Types.Resource;
+		const operation = this.getNodeParameter('operation', 0) as string;
+
+		let responseData;
+		const returnData: IDataObject[] = [];
+
+		for (let i = 0; i < items.length; i++) {
+
+			try {
+
+				if (resource === 'contact') {
+
+					if (operation === 'where') {
+						const qs: IDataObject = {};
+
+						const { sortUi, ...rest } = this.getNodeParameter('filters', i) as Types.UserFilterFields;
+
+						Object.assign(qs, sortUi?.sortDetails);
+
+						Object.assign(qs, rest);
+
+						qs.query ||= ''; // otherwise triggers 500
+
+						const returnAll = this.getNodeParameter('returnAll', i) as boolean;
+
+						const limit = returnAll ? 0 : this.getNodeParameter('limit', i) as number;
+
+						responseData = await sufficitApiRequestAllItems.call(
+							this, 'GET', '/contacts/contacts', {}, qs, limit,
+						).then(responseData => {
+								return responseData.map(user => {
+								const { preferences, ...rest } = user;
+								return rest;
+							});
+						});
+
+					}
+				}
+
+				Array.isArray(responseData)
+					? returnData.push(...responseData)
+					: returnData.push(responseData);
+			} catch (error) {
+				if (this.continueOnFail()) {
+					returnData.push({ error: error.message });
+					continue;
+				}
+				throw error;
+			}
+		}
+
+		return [this.helpers.returnJsonArray(returnData)];
 	}
 
 	methods = {
@@ -131,29 +183,9 @@ export class Sufficit implements INodeType {
 				this: ICredentialTestFunctions,
 				credential: ICredentialsDecrypted,
 			): Promise<INodeCredentialTestResult> {
-				const credentials = credential.data as SufficitTypes.BasicAuthCredentials;
-
-				const options: OptionsWithUri = {
-					auth:{
-						user: Identity.clientName as string,
-						pass: '' as string,
-					},
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
-					method: 'POST',
-					form: {
-						grant_type: 'password',
-						username: credentials!.username as string,
-						password: credentials!.password as string,
-						scope: 'directives',
-					},
-					uri: `${Identity.baseUrl}${Identity.tokenEndpoint}`,
-					json: true,
-				};
-
+				const credentials = credential.data as Types.BasicAuthCredentials;
 				try {
-					await this.helpers.request(options);
+					await getAccessTokenFromBasic(this, credentials);
 					return {
 						status: 'OK',
 						message: 'Authentication successful',
@@ -170,19 +202,9 @@ export class Sufficit implements INodeType {
 				this: ICredentialTestFunctions,
 				credential: ICredentialsDecrypted,
 			): Promise<INodeCredentialTestResult> {
-				const credentials = credential.data as SufficitTypes.TokenAuthCredentials;
-
-				const options: OptionsWithUri = {
-					method: 'GET',
-					uri: `${Identity.baseUrl}${Identity.userInfoEndpoint}`,
-					json: true,
-					headers: {
-						Authorization: `Bearer ${credentials.accessToken}`,
-					},
-				};
-
+				const credentials = credential.data as Types.TokenAuthCredentials;
 				try {
-					await this.helpers.request(options);
+					await validateAccessToken(this, credentials);
 					return {
 						status: 'OK',
 						message: 'Authentication successful',

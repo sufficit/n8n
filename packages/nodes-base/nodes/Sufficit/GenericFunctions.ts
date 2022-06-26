@@ -9,17 +9,29 @@ import {
 } from 'request';
 
 import {
-	IDataObject, NodeApiError, NodeOperationError,
+	IDataObject,
+	NodeApiError,
+	NodeOperationError,
 	ICredentialType,
+	ICredentialTestFunctions,
 } from 'n8n-workflow';
 
 import {
 	get,
 } from 'lodash';
 
-import moment from 'moment-timezone';
+import type { Sufficit } from './types';
 
-import jwt from 'jsonwebtoken';
+export const Identity = {
+	baseUrl: 'https://identity.sufficit.com.br',
+	tokenEndpoint: '/connect/token',
+	userInfoEndpoint: '/connect/userinfo',
+	clientName: 'SufficitEndPoints',
+};
+
+export const EndPointsAPI ={
+	baseUrl: 'https://endpoints.sufficit.com.br',
+}
 
 export async function sufficitApiRequest(
 	this: ILoadOptionsFunctions | IExecuteFunctions | IExecuteSingleFunctions,
@@ -35,7 +47,7 @@ export async function sufficitApiRequest(
 		},
 		method,
 		body,
-		uri: `https://endpoints.sufficit.com.br/${endpoint}`,
+		uri: `${EndPointsAPI.baseUrl}/${endpoint}`,
 		json: true,
 	};
 
@@ -61,6 +73,34 @@ export async function sufficitApiRequest(
 	}
 }
 
+export async function sufficitApiRequestAllItems(
+	this: IExecuteFunctions | ILoadOptionsFunctions,
+	method: string,
+	endpoint: string,
+	body: IDataObject = {},
+	qs: IDataObject = {},
+	limit = 0,
+) {
+	const returnData: IDataObject[] = [];
+
+	let responseData;
+	qs.per_page = 20;
+	qs.page = 1;
+
+	do {
+		responseData = await sufficitApiRequest.call(this, method, endpoint, body, qs);
+		returnData.push(...responseData);
+
+		if (limit && returnData.length > limit) {
+			return returnData.slice(0, limit);
+		}
+
+		qs.page++;
+	} while (responseData.length);
+
+	return returnData;
+}
+
 export function eventExists(currentEvents: string[], webhookEvents: IDataObject) {
 	for (const currentEvent of currentEvents) {
 		if (get(webhookEvents, `${currentEvent.split('.')[0]}.${currentEvent.split('.')[1]}`) !== true) {
@@ -80,12 +120,43 @@ export function validateJSON(json: string | undefined): any { // tslint:disable-
 	return result;
 }
 
-async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | IExecuteSingleFunctions): Promise<IDataObject> {
-	const credentials = await this.getCredentials('sufficitApi');
+export async function getAccessTokenFromBasic(this: ICredentialTestFunctions, credentials: Sufficit.BasicAuthCredentials){
+	const options = requestToken(credentials!.username as string, credentials!.password as string);
+	const response = await this.helpers.request(options) as Sufficit.IdentityTokenReponse;
+	return response.access_token;
+}
+
+export async function validateAccessToken(this: ICredentialTestFunctions, credentials: Sufficit.TokenAuthCredentials){
+	const options: OptionsWithUri = {
+		method: 'GET',
+		uri: `${Identity.baseUrl}${Identity.userInfoEndpoint}`,
+		json: true,
+		headers: {
+			Authorization: `Bearer ${credentials.accessToken}`,
+		},
+	};
+
+	return this.helpers.request(options) as Sufficit.IdentityTokenReponse;
+}
+
+export async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | IExecuteSingleFunctions): Promise<IDataObject> {
+	const authentication = this.getNodeParameter('authentication', 0) as 'basicAuth' | 'tokenAuth';
+	if (authentication === 'basicAuth') {
+		const credentials = await this.getCredentials('sufficitBasicAuthApi') as Sufficit.BasicAuthCredentials;
+		const options = requestToken(credentials!.username as string, credentials!.password as string);
+		const response = await this.helpers.request(options) as Sufficit.IdentityTokenReponse;
+		return response.access_token;
+	} else {
+		const credentials = await this.getCredentials('sufficitTokenAuthApi') as Sufficit.TokenAuthCredentials;
+		return credentials.accessToken;
+	}
+}
+
+function requestToken(username: string, password: string){
 	const options: OptionsWithUri = {
 		auth:{
-			user: 'SufficitEndPoints',
-			pass: '',
+			user: Identity.clientName as string,
+			pass: '' as string,
 		},
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',
@@ -93,14 +164,12 @@ async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | 
 		method: 'POST',
 		form: {
 			grant_type: 'password',
-			username: credentials.user,
-			password: credentials.password,
+			username: username as string,
+			password: password as string,
 			scope: 'directives',
 		},
-		uri: 'https://identity.sufficit.com.br/connect/token',
+		uri: `${Identity.baseUrl}${Identity.tokenEndpoint}`,
 		json: true,
 	};
-
-	//@ts-ignore
-	return this.helpers.request(options);
+	return options;
 }
