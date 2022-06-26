@@ -7,6 +7,11 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	ICredentialsDecrypted,
+	ICredentialTestFunctions,
+	ILoadOptionsFunctions,
+	INodeCredentialTestResult,
+	NodeOperationError,
 } from 'n8n-workflow';
 
 import {
@@ -25,6 +30,15 @@ import {
 	OptionsWithUri,
 } from 'request';
 
+import type { Sufficit as SufficitTypes } from './types';
+
+const Identity = {
+	baseUrl: 'https://identity.sufficit.com.br',
+	tokenEndpoint: '/connect/token',
+	userInfoEndpoint: '/connect/userinfo',
+	clientName: 'SufficitEndPoints',
+}
+
 export class Sufficit implements INodeType {
 	description: INodeTypeDescription = {
 			displayName: 'Sufficit',
@@ -42,33 +56,144 @@ export class Sufficit implements INodeType {
 			outputs: ['main'],
 			credentials: [
 				{
-					name: 'sufficitApi',
+					name: 'sufficitBasicAuthApi',
 					required: false,
+					testedBy: 'sufficitBasicAuthApiTest',
+					displayOptions: {
+						show: {
+							authentication: [
+								'basicAuth',
+							],
+						},
+					},
+				},
+				{
+					name: 'sufficitTokenAuthApi',
+					required: false,
+					testedBy: 'sufficitTokenAuthApiTest',
+					displayOptions: {
+						show: {
+							authentication: [
+								'tokenAuth',
+							],
+						},
+					},
 				},
 			],
 			properties: [
-					// Node properties which the user gets displayed and
-					// can change on the node.
-					{
-						displayName: 'Resource',
-						name: 'resource',
-						type: 'options',
-						noDataExpression: true,
-						options: [
-							{
-								name: 'Contact',
-								value: 'contact',
-							},
-						],
-						default: 'contact',
-						required: true,
-					},
-					...contactOperations,
-					...contactFields,
+				{
+					displayName: 'Authentication',
+					name: 'authentication',
+					type: 'options',
+					options: [
+						{
+							name: 'Basic Auth',
+							value: 'basicAuth',
+						},
+						{
+							name: 'Token Auth',
+							value: 'tokenAuth',
+						},
+					],
+					default: 'tokenAuth',
+				},
+				{
+					displayName: 'Resource',
+					name: 'resource',
+					type: 'options',
+					noDataExpression: true,
+					options: [
+						{
+							name: 'Contact',
+							value: 'contact',
+						},
+					],
+					default: 'contact',
+					required: true,
+				},
+				...contactOperations,
+				...contactFields,
+
+				...groupDescription,
+				...organizationDescription,
+				...ticketDescription,
+				...userDescription,
 			],
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 			return [[]];
 	}
+
+	methods = {
+		credentialTest: {
+			async sufficitBasicAuthApiTest(
+				this: ICredentialTestFunctions,
+				credential: ICredentialsDecrypted,
+			): Promise<INodeCredentialTestResult> {
+				const credentials = credential.data as SufficitTypes.BasicAuthCredentials;
+
+				const options: OptionsWithUri = {
+					auth:{
+						user: Identity.clientName,
+						pass: '',
+					},
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					method: 'POST',
+					form: {
+						grant_type: 'password',
+						username: credentials.username,
+						password: credentials.password,
+						scope: 'directives',
+					},
+					uri: `${Identity.baseUrl}${Identity.tokenEndpoint}`,
+					json: true,
+				};
+
+				try {
+					await this.helpers.request(options);
+					return {
+						status: 'OK',
+						message: 'Authentication successful',
+					};
+				} catch (error) {
+					return {
+						status: 'Error',
+						message: error.message,
+					};
+				}
+			},
+
+			async sufficitTokenAuthApiTest(
+				this: ICredentialTestFunctions,
+				credential: ICredentialsDecrypted,
+			): Promise<INodeCredentialTestResult> {
+				const credentials = credential.data as SufficitTypes.TokenAuthCredentials;
+
+				const options: OptionsWithUri = {
+					method: 'GET',
+					uri: `${Identity.baseUrl}${Identity.userInfoEndpoint}`,
+					json: true,
+					headers: {
+						Authorization: `Bearer ${credentials.accessToken}`,
+					},
+				};
+
+				try {
+					await this.helpers.request(options);
+					return {
+						status: 'OK',
+						message: 'Authentication successful',
+					};
+				} catch (error) {
+					return {
+						status: 'Error',
+						message: error.message,
+					};
+				}
+			},
+		},
+	};
 }
