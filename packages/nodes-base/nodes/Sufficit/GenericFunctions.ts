@@ -136,7 +136,9 @@ async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | 
 	const authentication = this.getNodeParameter('authentication', 0) as 'basicAuth' | 'tokenAuth';
 	if (authentication === 'basicAuth') {
 		const credentials = await this.getCredentials('sufficitBasicAuthApi') as Sufficit.BasicAuthCredentials;
+		if(!credentials) return "";
 		const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
+		if (!options || !this || !this.helpers || !this.helpers.request) return "";
 		const response = await this.helpers.request(options);
 		return response.access_token;
 	} else {
