@@ -137,8 +137,12 @@ export async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunct
 	if (authentication === 'basicAuth') {
 		const credentials = await this.getCredentials('sufficitBasicAuthApi') as Sufficit.BasicAuthCredentials;
 		const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
-		const response = await this.helpers.request(options) as Sufficit.IdentityTokenReponse;
-		return response.access_token;
+		try {
+			const response = await this.helpers.request(options) as Sufficit.IdentityTokenReponse;
+			return response.access_token;
+		} catch (error) {
+			throw new NodeApiError(this.getNode(), error);
+		}
 	} else {
 		const credentials = await this.getCredentials('sufficitTokenAuthApi') as Sufficit.TokenAuthCredentials;
 		return credentials.accessToken;

@@ -158,6 +158,8 @@ export class Sufficit implements INodeType {
 							});
 						});
 
+					} else {
+						continue;
 					}
 				} else {
 					continue;
