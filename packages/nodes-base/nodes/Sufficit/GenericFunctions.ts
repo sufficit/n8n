@@ -46,8 +46,7 @@ export async function sufficitApiRequest(
 			delete options.body;
 		}
 
-		const credentials = await this.getCredentials('sufficitApi');
-		const { access_token } = await getAccessToken.call(this, credentials as unknown as ICredentialType);
+		const { access_token } = await getAccessToken.call(this);
 		options.headers!.Authorization = `Bearer ${access_token}`;
 
 		query = query || {};
@@ -82,8 +81,8 @@ export function validateJSON(json: string | undefined): any { // tslint:disable-
 	return result;
 }
 
-function getAccessToken(this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions, credentials: ICredentialType): Promise<IDataObject> {
-
+async function getAccessToken(this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions): Promise<IDataObject> {
+	const credentials = await this.getCredentials('SufficitApi');
 	const options: OptionsWithUri = {
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',
