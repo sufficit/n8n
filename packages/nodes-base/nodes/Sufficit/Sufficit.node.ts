@@ -160,7 +160,7 @@ export class Sufficit implements INodeType {
 
 					}
 				} else {
-					responseData = {}
+					continue;
 				}
 
 				Array.isArray(responseData)
