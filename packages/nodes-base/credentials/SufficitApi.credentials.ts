@@ -27,8 +27,8 @@ export class SufficitApi implements ICredentialType {
 	};
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://endpoints.sufficit.com.br',
-			url: '/identity/userpolicies',
+			baseURL: 'https://identity.sufficit.com.br',
+			url: '/connect/userinfo',
 		},
 		rules: [
 			{
