@@ -54,8 +54,8 @@ export class SufficitBasicAuthApi implements ICredentialType {
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://endpoints.sufficit.com.br',
-			url: '/weatherforecast',
+			baseURL: 'https://identity.sufficit.com.br',
+			url: '/connect/userinfo',
 		},
 		rules: [
 			{

@@ -161,7 +161,7 @@ export function requestAccessToken(username: string, password: string){
 			grant_type: 'password',
 			username: username as string,
 			password: password as string,
-			scope: 'directives',
+			scope: 'openid directives',
 		},
 		uri: `${Identity.baseUrl}${Identity.tokenEndpoint}`,
 		json: true,
