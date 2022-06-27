@@ -2,6 +2,7 @@ import {
 	ICredentialType,
 	INodeProperties,
 	IAuthenticateBearer,
+	ICredentialTestRequest,
 } from 'n8n-workflow';
 
 export class SufficitTokenAuthApi implements ICredentialType {
@@ -22,4 +23,21 @@ export class SufficitTokenAuthApi implements ICredentialType {
 		type: 'bearer',
 		properties: {},
 	} as IAuthenticateBearer;
+
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: 'https://identity.sufficit.com.br',
+			url: '/connect/userinfo',
+		},
+		rules: [
+			{
+				type: 'responseSuccessBody',
+				properties: {
+					key: 'error',
+					value: 'invalid_auth',
+					message: 'Invalid access token',
+				},
+			},
+		],
+	};
 }
