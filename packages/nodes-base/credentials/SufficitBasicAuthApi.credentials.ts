@@ -1,7 +1,27 @@
 import {
 	ICredentialType,
+	ICredentialTestRequest,
+	ICredentialDataDecryptedObject,
+	IHttpRequestOptions,
 	INodeProperties,
 } from 'n8n-workflow';
+
+import {
+	IExecuteFunctions,
+	IExecuteSingleFunctions,
+	ILoadOptionsFunctions,
+} from 'n8n-core';
+
+import {
+	OptionsWithUri,
+} from 'request';
+
+import {
+	requestAccessToken,
+	requestUserInfo,
+	sufficitApiRequest,
+	sufficitApiRequestAllItems,
+} from '../nodes/Sufficit/GenericFunctions';
 
 export class SufficitBasicAuthApi implements ICredentialType {
 	name = 'sufficitBasicAuthApi';
@@ -24,5 +44,35 @@ export class SufficitBasicAuthApi implements ICredentialType {
 			},
 			default: '',
 		},
+		{
+			displayName: 'Access Token',
+			name: 'accessToken',
+			type: 'hidden',
+		}
 	];
+
+	test: ICredentialTestRequest = {
+		request: {
+			baseURL: 'https://endpoints.sufficit.com.br',
+			url: '/weatherforecast',
+		},
+		rules: [
+			{
+				type: 'responseSuccessBody',
+				properties: {
+					key: 'error',
+					value: 'invalid_auth',
+					message: 'Invalid access token',
+				},
+			},
+		],
+	};
+
+	async authenticate(this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions, credentials: ICredentialDataDecryptedObject, requestOptions: IHttpRequestOptions): Promise<IHttpRequestOptions> {
+		const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
+		const response = await this.helpers.request(options);
+		credentials.accessToken = response.access_token;
+		requestOptions.headers = { 'Authorization': `Bearer ${credentials.accessToken}` };
+		return requestOptions;
+	}
 }

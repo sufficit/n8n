@@ -35,8 +35,6 @@ import {
 
 import type { Sufficit as Types } from './types';
 
-
-
 export class Sufficit implements INodeType {
 	description: INodeTypeDescription = {
 			displayName: 'Sufficit',
@@ -150,7 +148,7 @@ export class Sufficit implements INodeType {
 						const limit = returnAll ? 0 : this.getNodeParameter('limit', i) as number;
 
 						responseData = await sufficitApiRequestAllItems.call(
-							this, 'GET', '/contacts/contacts', {}, qs, limit,
+							this, 'GET', '/contact', {}, qs, limit,
 						).then(responseData => {
 								return responseData.map(user => {
 								const { preferences, ...rest } = user;
