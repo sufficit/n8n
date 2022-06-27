@@ -25,7 +25,7 @@ import {
 
 export class SufficitBasicAuthApi implements ICredentialType {
 	name = 'sufficitBasicAuthApi';
-	displayName = 'Sufficit EndPoints Token Request';
+	displayName = 'Sufficit Basic Auth';
 	documentationUrl = 'sufficit';
 	properties: INodeProperties[] = [
 		{

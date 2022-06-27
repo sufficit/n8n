@@ -1,11 +1,12 @@
 import {
 	ICredentialType,
 	INodeProperties,
+	IAuthenticateBearer,
 } from 'n8n-workflow';
 
 export class SufficitTokenAuthApi implements ICredentialType {
 	name = 'sufficitTokenAuthApi';
-	displayName = 'Sufficit EndPoints API Token';
+	displayName = 'Sufficit Bearer Access Token';
 	documentationUrl = 'sufficit';
 	properties: INodeProperties[] = [
 		{
@@ -16,4 +17,9 @@ export class SufficitTokenAuthApi implements ICredentialType {
 			required: true,
 		},
 	];
+
+	authenticate = {
+		type: 'bearer',
+		properties: {},
+	} as IAuthenticateBearer;
 }
