@@ -48,6 +48,7 @@ export class SufficitBasicAuthApi implements ICredentialType {
 			displayName: 'Access Token',
 			name: 'accessToken',
 			type: 'hidden',
+			default: '',
 		}
 	];
 
@@ -70,6 +71,7 @@ export class SufficitBasicAuthApi implements ICredentialType {
 
 	async authenticate(this: IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions, credentials: ICredentialDataDecryptedObject, requestOptions: IHttpRequestOptions): Promise<IHttpRequestOptions> {
 		const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
+		if (!options || !this || !this.helpers || !this.helpers.request) return requestOptions;
 		const response = await this.helpers.request(options);
 		credentials.accessToken = response.access_token;
 		requestOptions.headers = { 'Authorization': `Bearer ${credentials.accessToken}` };
