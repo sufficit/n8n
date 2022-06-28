@@ -47,7 +47,7 @@ export async function sufficitApiRequest(
 		},
 		method,
 		body,
-		uri: `${EndPointsAPI.baseUrl}/${endpoint}`,
+		uri: `${EndPointsAPI.baseUrl}${endpoint}`,
 		json: true,
 	};
 
@@ -61,7 +61,6 @@ export async function sufficitApiRequest(
 		options.headers!.Authorization = `Bearer ${access_token}`;
 
 		query = query || {};
-
 
 		if (options.qs && Object.keys(options.qs).length === 0) {
 			delete options.qs;
