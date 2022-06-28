@@ -31,6 +31,8 @@ export const Identity = {
 	clientName: 'SufficitEndPoints',
 };
 
+export const AccessTokenUrl = `${Identity.baseUrl}${Identity.tokenEndpoint}`;
+
 export const EndPointsAPI ={
 	baseUrl: 'https://endpoints.sufficit.com.br',
 }
@@ -164,12 +166,13 @@ export function requestAccessToken(username: string, password: string){
 			password: password as string,
 			scope: 'openid directives',
 		},
-		uri: `${Identity.baseUrl}${Identity.tokenEndpoint}`,
+		uri: AccessTokenUrl,
 		json: true,
 	} as OptionsWithUri;
 }
 
-export function requestAccessTokenWUrl(username: string, password: string){
+
+export function requestInfo(username: string, password: string){
 	return {
 		auth:{
 			username: Identity.clientName as string,
@@ -185,7 +188,7 @@ export function requestAccessTokenWUrl(username: string, password: string){
 			password: password as string,
 			scope: 'openid directives',
 		},
-		url: `${Identity.baseUrl}${Identity.tokenEndpoint}`,
+		url: AccessTokenUrl,
 		json: true,
 	} as IHttpRequestOptions;
 }

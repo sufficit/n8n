@@ -7,7 +7,7 @@ import {
 } from 'n8n-workflow';
 
 import {
-	requestAccessTokenWUrl,
+	AccessTokenUrl,
 	requestAccessToken,
 } from '../nodes/Sufficit/GenericFunctions';
 
@@ -62,7 +62,7 @@ export class SufficitBasicAuthApi implements ICredentialType {
 	async authenticate(credentials: ICredentialDataDecryptedObject, requestOptions: IHttpRequestOptions): Promise<IHttpRequestOptions> {
 		if(!credentials.accessToken){
 			const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
-			const response = await fetch(options);
+			const response = await fetch(AccessTokenUrl, options);
 			const data = await response.json();
 			credentials.accessToken = data.access_token;
 		}
