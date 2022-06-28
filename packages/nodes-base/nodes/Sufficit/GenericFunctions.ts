@@ -139,8 +139,8 @@ async function getAccessToken(this: ILoadOptionsFunctions | IExecuteFunctions | 
 		const credentials = await this.getCredentials('sufficitBasicAuthApi') as Sufficit.BasicAuthCredentials;
 		if(!credentials) return "";
 		const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
-		if (!options || !this || !this.helpers || !this.helpers.request) return "";
-		const response = await this.helpers.request(options);
+		//if (!options || !this || !this.helpers || !this.helpers.request) return "";
+		const response = await this.helpers.request!(options);
 		return response.access_token;
 	} else {
 		const credentials = await this.getCredentials('sufficitTokenAuthApi') as Sufficit.TokenAuthCredentials;
@@ -189,5 +189,3 @@ export function requestAccessTokenWUrl(username: string, password: string){
 		json: true,
 	} as IHttpRequestOptions;
 }
-
-
