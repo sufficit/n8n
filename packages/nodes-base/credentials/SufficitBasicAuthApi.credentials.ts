@@ -67,7 +67,7 @@ export class SufficitBasicAuthApi implements ICredentialType {
 			const data = await response.json();
 
 			if (!response.ok) {
-				throw new Error(`error on authenticate ! status: ${response.status}, data: ${data}`);
+				throw new Error(`error on authenticate ! status: ${response.status}, data: ${JSON.stringify(data)}`);
 			}
 
 			Logger.debug('SUFFICIT :: ', data);
