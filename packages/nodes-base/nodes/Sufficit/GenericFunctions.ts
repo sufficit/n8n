@@ -175,8 +175,8 @@ export function requestAccessToken(username: string, password: string){
 export function requestInfo(username: string, password: string){
 	return {
 		auth:{
-			username: Identity.clientName as string,
-			password: '' as string,
+			user: Identity.clientName as string,
+			pass: '' as string,
 		},
 		headers: {
 			'Content-Type': 'application/x-www-form-urlencoded',
