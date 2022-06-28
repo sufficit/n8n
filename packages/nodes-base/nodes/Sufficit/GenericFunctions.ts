@@ -188,7 +188,6 @@ export function requestInfo(username: string, password: string){
 			password: password as string,
 			scope: 'openid directives',
 		},
-		url: AccessTokenUrl,
 		json: true,
-	} as IHttpRequestOptions;
+	};
 }
