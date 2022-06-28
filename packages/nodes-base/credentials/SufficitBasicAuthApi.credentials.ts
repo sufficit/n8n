@@ -4,6 +4,7 @@ import {
 	ICredentialDataDecryptedObject,
 	IHttpRequestOptions,
 	INodeProperties,
+	LoggerProxy as Logger,
 } from 'n8n-workflow';
 
 import {
@@ -69,7 +70,7 @@ export class SufficitBasicAuthApi implements ICredentialType {
 			}
 
 			const data = await response.json();
-			console.debug(`SUFFICIT :: ${data}`);
+			Logger.debug('SUFFICIT :: ', data);
 
 			requestOptions.headers = { 'Authorization': `Bearer ${data.access_token}` };
 		} else {
