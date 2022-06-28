@@ -14,6 +14,7 @@ import {
 	NodeOperationError,
 	ICredentialType,
 	ICredentialTestFunctions,
+	IHttpRequestOptions,
 } from 'n8n-workflow';
 
 import {
@@ -21,6 +22,7 @@ import {
 } from 'lodash';
 
 import type { Sufficit } from './types';
+import { options } from '../KoBoToolbox/Options';
 
 export const Identity = {
 	baseUrl: 'https://identity.sufficit.com.br',
@@ -166,3 +168,26 @@ export function requestAccessToken(username: string, password: string){
 		json: true,
 	} as OptionsWithUri;
 }
+
+export function requestAccessTokenWUrl(username: string, password: string){
+	return {
+		auth:{
+			username: Identity.clientName as string,
+			password: '' as string,
+		},
+		headers: {
+			'Content-Type': 'application/x-www-form-urlencoded',
+		},
+		method: 'POST',
+		form: {
+			grant_type: 'password',
+			username: username as string,
+			password: password as string,
+			scope: 'openid directives',
+		},
+		url: `${Identity.baseUrl}${Identity.tokenEndpoint}`,
+		json: true,
+	} as IHttpRequestOptions;
+}
+
+
