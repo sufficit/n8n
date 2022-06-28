@@ -65,10 +65,12 @@ export class SufficitBasicAuthApi implements ICredentialType {
 			const response = await fetch(AccessTokenUrl, options);
 			const data = await response.json();
 			console.log(data);
-			credentials.accessToken = data.access_token;
+
+			requestOptions.headers = { 'Authorization': `Bearer ${data.access_token}` };
+		} else {
+			requestOptions.headers = { 'Authorization': `Bearer ${credentials.accessToken}` };
 		}
 
-		requestOptions.headers = { 'Authorization': `Bearer ${credentials.accessToken}` };
 		return requestOptions;
 	}
 }
