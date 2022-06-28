@@ -7,22 +7,11 @@ import {
 } from 'n8n-workflow';
 
 import {
-	IExecuteFunctions,
-	IExecuteSingleFunctions,
-	ILoadOptionsFunctions,
-} from 'n8n-core';
-
-import {
-	OptionsWithUri,
-} from 'request';
-
-import {
 	requestAccessToken,
 	requestUserInfo,
 	sufficitApiRequest,
 	sufficitApiRequestAllItems,
 } from '../nodes/Sufficit/GenericFunctions';
-import { HttpRequest } from '../nodes/HttpRequest/HttpRequest.node';
 
 export class SufficitBasicAuthApi implements ICredentialType {
 	name = 'sufficitBasicAuthApi';
@@ -72,9 +61,7 @@ export class SufficitBasicAuthApi implements ICredentialType {
 
 	async authenticate(credentials: ICredentialDataDecryptedObject, requestOptions: IHttpRequestOptions): Promise<IHttpRequestOptions> {
 		if(!credentials.accessToken){
-			const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
-			const response = await requestOptions.request(options);
-			credentials.accessToken = response.access_token;
+			return requestAccessToken(credentials!.username as string, credentials!.password as string);
 		}
 
 		requestOptions.headers = { 'Authorization': `Bearer ${credentials.accessToken}` };
