@@ -63,6 +63,7 @@ export class SufficitBasicAuthApi implements ICredentialType {
 	async authenticate(credentials: ICredentialDataDecryptedObject, requestOptions: IHttpRequestOptions): Promise<IHttpRequestOptions> {
 		if(!credentials.accessToken){
 			const options = requestInfo(credentials!.username as string, credentials!.password as string);
+			Logger.debug('SUFFICIT :: options: ', JSON.stringify(options));
 			const response = await fetch(AccessTokenUrl, options);
 			const data = await response.json();
 
