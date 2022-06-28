@@ -8,7 +8,7 @@ import {
 
 import {
 	AccessTokenUrl,
-	requestAccessToken,
+	requestInfo,
 } from '../nodes/Sufficit/GenericFunctions';
 
 import fetch from 'node-fetch';
@@ -61,7 +61,7 @@ export class SufficitBasicAuthApi implements ICredentialType {
 
 	async authenticate(credentials: ICredentialDataDecryptedObject, requestOptions: IHttpRequestOptions): Promise<IHttpRequestOptions> {
 		if(!credentials.accessToken){
-			const options = requestAccessToken(credentials!.username as string, credentials!.password as string);
+			const options = requestInfo(credentials!.username as string, credentials!.password as string);
 			const response = await fetch(AccessTokenUrl, options);
 			const data = await response.json();
 			credentials.accessToken = data.access_token;
