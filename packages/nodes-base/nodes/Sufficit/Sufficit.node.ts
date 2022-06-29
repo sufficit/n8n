@@ -15,11 +15,7 @@ import {
 } from 'n8n-workflow';
 
 import {
-	contactFields,
-	contactOperations
-} from './ContactDescription';
-
-import {
+	contactDescription, contactFields,
 	groupDescription,
 	organizationDescription,
 	ticketDescription,
@@ -42,7 +38,7 @@ export class Sufficit implements INodeType {
 			icon: 'file:sufficit.png',
 			group: ['transform'],
 			version: 1,
-			subtitle: '={{$parameter["operation"] + ":" + $parameter["resource"]}}',
+			subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 			description: 'Consume Sufficit API',
 			defaults: {
 					name: 'Sufficit',
@@ -50,7 +46,7 @@ export class Sufficit implements INodeType {
 			},
 			inputs: ['main'],
 			outputs: ['main'],
-			credentials: [
+			credentials: [				
 				{
 					name: 'sufficitBasicAuthApi',
 					required: false,
@@ -107,7 +103,7 @@ export class Sufficit implements INodeType {
 					default: 'contact',
 					required: true,
 				},
-				...contactOperations,
+				...contactDescription,
 				...contactFields,
 
 				...groupDescription,
@@ -131,8 +127,12 @@ export class Sufficit implements INodeType {
 			try {
 
 				if (resource === 'contact') {
-
-					if (operation === 'where') {
+					if (operation === 'find') {
+						const qs: IDataObject = {};
+						const contactId = this.getNodeParameter('contactId', i) as string;
+						qs.id = contactId;
+						responseData = await sufficitApiRequest.call(this, 'GET', '/contact', {}, qs);
+					} else if (operation === 'where') {
 						const qs: IDataObject = {};
 
 						const { sortUi, ...rest } = this.getNodeParameter('filters', i) as Types.UserFilterFields;
@@ -147,25 +147,21 @@ export class Sufficit implements INodeType {
 
 						const limit = returnAll ? 0 : this.getNodeParameter('limit', i) as number;
 
-						responseData = await sufficitApiRequestAllItems.call(
-							this, 'GET', '/contact', {}, qs, limit,
-						).then(responseData => {
+						responseData = await sufficitApiRequestAllItems.call(this, 'GET', '/contact', {}, qs, limit).then(responseData => {
 								return responseData.map(user => {
 								const { preferences, ...rest } = user;
 								return rest;
 							});
 						});
 
-					} else {
-						continue;
-					}
-				} else {
-					continue;
-				}
+					} 
+				} 
 
-				Array.isArray(responseData)
-					? returnData.push(...responseData)
-					: returnData.push(responseData);
+				if (Array.isArray(responseData)) {
+					returnData.push.apply(returnData, responseData as IDataObject[]);
+				} else if (responseData !== undefined) {
+					returnData.push(responseData as IDataObject);
+				}
 			} catch (error) {
 				if (this.continueOnFail()) {
 					returnData.push({ error: error.message });

@@ -37,21 +37,15 @@ export const EndPointsAPI ={
 	baseUrl: 'https://endpoints.sufficit.com.br',
 }
 
-export async function sufficitApiRequest(
-	this: ILoadOptionsFunctions | IExecuteFunctions | IExecuteSingleFunctions,
-	method: string,
-	endpoint: string,
-	body: object,
-	query?: IDataObject
-): Promise<any> {
-
+export async function sufficitApiRequest(this: IExecuteFunctions | ILoadOptionsFunctions, method: string, endpoint: string, body: any = {}, qs: IDataObject = {}, uri?: string, headers: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
 	const options: OptionsWithUri = {
 		headers: {
 			'Content-Type': 'application/json',
 		},
 		method,
 		body,
-		uri: `${EndPointsAPI.baseUrl}${endpoint}`,
+		qs,
+		uri: uri || `${EndPointsAPI.baseUrl}${endpoint}`,
 		json: true,
 	};
 
@@ -61,10 +55,12 @@ export async function sufficitApiRequest(
 			delete options.body;
 		}
 
-		const access_token = await getAccessToken.call(this);
-		options.headers!.Authorization = `Bearer ${access_token}`;
-
-		query = query || {};
+		// checking if that endpoint should be authorized
+		if(isAuthorizedEndPoint(endpoint)){
+			const access_token = await getAccessToken.call(this);
+			options.headers!.Authorization = `Bearer ${access_token}`;
+		}
+		qs = qs || {};
 
 		if (options.qs && Object.keys(options.qs).length === 0) {
 			delete options.qs;
@@ -79,7 +75,7 @@ export async function sufficitApiRequest(
 export async function sufficitApiRequestAllItems(
 	this: IExecuteFunctions | ILoadOptionsFunctions,
 	method: string,
-	endpoint: string,
+	resource: string,
 	body: IDataObject = {},
 	qs: IDataObject = {},
 	limit = 0,
@@ -91,7 +87,7 @@ export async function sufficitApiRequestAllItems(
 	qs.page = 1;
 
 	do {
-		responseData = await sufficitApiRequest.call(this, method, endpoint, body, qs);
+		responseData = await sufficitApiRequest.call(this, method, resource, body, qs);
 		returnData.push(...responseData);
 
 		if (limit && returnData.length > limit) {
@@ -102,6 +98,13 @@ export async function sufficitApiRequestAllItems(
 	} while (responseData.length);
 
 	return returnData;
+}
+
+export function isAuthorizedEndPoint(ep: string): boolean {
+	switch(ep){
+		case "/contact": return false;
+		default: return true;
+	}
 }
 
 export function eventExists(currentEvents: string[], webhookEvents: IDataObject) {
