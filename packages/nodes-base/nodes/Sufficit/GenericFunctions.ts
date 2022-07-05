@@ -177,20 +177,17 @@ export function requestAccessToken(username: string, password: string){
 
 export function requestInfo(username: string, password: string){
 	return {
-		auth:{
-			username: Identity.clientName as string,
-			password: '' as string,
-		},
 		headers: {
+			'Authorization': 'Basic ' + Buffer.from(Identity.clientName + ":").toString('base64'),
 			'Content-Type': 'application/x-www-form-urlencoded',
 		},
 		method: 'POST',
-		form: {
-			grant_type: 'password',
-			username: username as string,
-			password: password as string,
-			scope: 'openid directives',
-		},
+		body: new URLSearchParams({
+			'grant_type': 'password',
+			'username': username as string,
+			'password': password as string,
+			'scope': 'openid directives',
+		}),
 		json: true,
 	};
 }

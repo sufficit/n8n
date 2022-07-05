@@ -35,6 +35,7 @@ export class Sufficit implements INodeType {
 	description: INodeTypeDescription = {
 			displayName: 'Sufficit',
 			name: 'sufficit',
+			// eslint-disable-next-line n8n-nodes-base/node-class-description-icon-not-svg
 			icon: 'file:sufficit.png',
 			group: ['transform'],
 			version: 1,
