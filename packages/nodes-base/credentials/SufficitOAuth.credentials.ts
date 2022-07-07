@@ -1,16 +1,8 @@
 import {
 	ICredentialType,
 	INodeProperties,
-	IAuthenticateBearer,
 	ICredentialTestRequest,
-	ICredentialDataDecryptedObject,
-	IHttpRequestOptions,
 } from 'n8n-workflow';
-
-import {
-	AccessTokenUrl,
-	Identity,
-} from '../nodes/Sufficit/GenericFunctions';
 
 export class SufficitOAuth implements ICredentialType {
 	name = 'sufficitOAuth';

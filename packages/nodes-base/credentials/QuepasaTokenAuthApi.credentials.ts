@@ -1,8 +1,6 @@
 import {
 	ICredentialType,
 	INodeProperties,
-	IAuthenticateBearer,
-	ICredentialTestRequest,
 } from 'n8n-workflow';
 
 export class QuepasaTokenAuthApi implements ICredentialType {

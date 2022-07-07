@@ -1,7 +1,7 @@
 import {
 	ICredentialType,
 	INodeProperties,
-	IAuthenticateBearer,
+	IAuthenticateGeneric,
 	ICredentialTestRequest,
 } from 'n8n-workflow';
 
@@ -19,10 +19,14 @@ export class SufficitTokenAuthApi implements ICredentialType {
 		},
 	];
 
-	authenticate = {
-		type: 'bearer',
-		properties: {},
-	} as IAuthenticateBearer;
+	authenticate: IAuthenticateGeneric = {
+		type: 'generic',
+		properties: {
+			headers: {
+				Authorization: 'Bearer {{$credentials.accessToken}}',
+			},
+		},
+	};
 
 	test: ICredentialTestRequest = {
 		request: {
