@@ -1,0 +1,513 @@
+{
+  "name": "From ChatWoot to Quepasa",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "content",
+              "value": "{   \"headers\": {     \"host\": \"n8n.sufficit.com.br\",     \"user-agent\": \"rest-client/2.1.0 (linux x86_64) ruby/3.0.4p208\",     \"content-length\": \"2656\",     \"accept\": \"application/json\",     \"accept-encoding\": \"gzip;q=1.0,deflate;q=0.6,identity;q=0.3\",     \"content-type\": \"application/json\",     \"x-forwarded-for\": \"187.108.193.40\",     \"x-forwarded-host\": \"n8n.sufficit.com.br\",     \"x-forwarded-port\": \"443\",     \"x-forwarded-proto\": \"https\",     \"x-forwarded-server\": \"c45ce109d129\",     \"x-real-ip\": \"187.108.193.40\"   },   \"params\": {},   \"query\": {},   \"body\": {     \"account\": {       \"id\": 1,       \"name\": \"Sufficit\"     },     \"additional_attributes\": {},     \"content_attributes\": {},     \"content_type\": \"text\",     \"content\": \"poi\",     \"conversation\": {       \"additional_attributes\": {         \"mail_subject\": \"\"       },       \"can_reply\": true,       \"channel\": \"Channel::Api\",       \"contact_inbox\": {         \"id\": 2,         \"contact_id\": 1,         \"inbox_id\": 2,         \"source_id\": \"1ef4c7c1-24e9-4a4b-aab2-b80832035d99\",         \"created_at\": \"2022-06-25T18:47:27.184Z\",         \"updated_at\": \"2022-06-25T18:47:27.184Z\",         \"hmac_verified\": false,         \"pubsub_token\": \"snyZ1ks2QP5a9p4yv37HWjT5\"       },       \"id\": 2,       \"inbox_id\": 2,       \"messages\": [         {           \"id\": 20,           \"content\": \"poi\",           \"account_id\": 1,           \"inbox_id\": 2,           \"conversation_id\": 2,           \"message_type\": 1,           \"created_at\": 1656182969,           \"updated_at\": \"2022-06-25T18:49:29.479Z\",           \"private\": false,           \"status\": \"sent\",           \"source_id\": null,           \"content_type\": \"text\",           \"content_attributes\": {},           \"sender_type\": \"User\",           \"sender_id\": 1,           \"external_source_ids\": {},           \"additional_attributes\": {},           \"conversation\": {             \"assignee_id\": 1           },           \"sender\": {             \"id\": 1,             \"name\": \"Hugo Castro de Deco\",             \"available_name\": \"Hugo Castro de Deco\",             \"avatar_url\": \"https://www.gravatar.com/avatar/9f6478116ce1ed7ff7f3b8dd8e747db9?d=404\",             \"type\": \"user\",             \"availability_status\": null,             \"thumbnail\": \"https://www.gravatar.com/avatar/9f6478116ce1ed7ff7f3b8dd8e747db9?d=404\"           }         }       ],       \"meta\": {         \"sender\": {           \"additional_attributes\": {             \"username\": \"hugodeco\",             \"description\": \"\",             \"company_name\": \"\",             \"language_code\": \"pt-br\",             \"social_profiles\": {               \"github\": \"\",               \"twitter\": \"\",               \"facebook\": \"\",               \"linkedin\": \"\"             }           },           \"custom_attributes\": {},           \"email\": null,           \"id\": 1,           \"identifier\": null,           \"name\": \"Hugo Deco\",           \"phone_number\": \"\",           \"thumbnail\": \"https://chatwoot.sufficit.com.br/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--fbbce2439a64bb5e3fe20a25cc8b93ca7f9ee1eb/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBJZ2hxY0djNkMzSmxjMmw2WlVraURESTFNSGd5TlRBR09nWkZWQT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--f0cba2d9dcf8b91ab298d17f8812348b17220477/file_13.jpg\",           \"type\": \"contact\"         },         \"assignee\": {           \"id\": 1,           \"name\": \"Hugo Castro de Deco\",           \"available_name\": \"Hugo Castro de Deco\",           \"avatar_url\": \"https://www.gravatar.com/avatar/9f6478116ce1ed7ff7f3b8dd8e747db9?d=404\",           \"type\": \"user\",           \"availability_status\": null,           \"thumbnail\": \"https://www.gravatar.com/avatar/9f6478116ce1ed7ff7f3b8dd8e747db9?d=404\"         },         \"hmac_verified\": false       },       \"status\": \"open\",       \"custom_attributes\": {},       \"snoozed_until\": null,       \"unread_count\": 0,       \"agent_last_seen_at\": 1656182969,       \"contact_last_seen_at\": 0,       \"timestamp\": 1656182969     },     \"created_at\": \"2022-06-25T18:49:29.479Z\",     \"id\": 20,     \"inbox\": {       \"id\": 2,       \"name\": \"Whatsapp\"     },     \"message_type\": \"outgoing\",     \"private\": false,     \"sender\": {       \"id\": 1,       \"name\": \"Hugo Castro de Deco\",       \"email\": \"hugodeco@sufficit.com.br\",       \"type\": \"user\"     },     \"source_id\": null,     \"event\": \"message_created\"   } }"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        20,
+        240
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "return [{json: JSON.parse(items.shift().json.content)}]"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        160,
+        240
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$json[\"quepasa\"][\"baseUrl\"]}}/v2/bot/{{$json[\"quepasa\"][\"token\"]}}/sendtext",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "recipient",
+              "value": "={{$json[\"conversation\"][\"contact_inbox\"][\"source_id\"]}}"
+            },
+            {
+              "name": "message",
+              "value": "={{$json[\"content\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "HTTP Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "quepasa.token",
+              "value": "40d5bb94-2f37-447f-9e2e-419b3b6940d0"
+            },
+            {
+              "name": "quepasa.baseUrl",
+              "value": "http://chatwoot.sufficit.com.br:31000"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Quepasa Info",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        620,
+        60
+      ],
+      "alwaysOutputData": true,
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "f1e9aab8-71a6-4853-b648-bf41f2b5a93f",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "From ChatWoot",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        100,
+        600
+      ],
+      "webhookId": "f1e9aab8-71a6-4853-b648-bf41f2b5a93f"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"body\"][\"event\"]}}",
+              "value2": "message_created"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        320,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "String.prototype.hexDecode = function(){\n    var j;\n    var hexes = this.match(/.{1,4}/g) || [];\n    var back = \"\";\n    for(j = 0; j<hexes.length; j++) {\n        back += String.fromCharCode(parseInt(hexes[j], 16));\n    }\n\n    return back;\n}\n\nfunction hex2a(hexx) {\n    var hex = hexx.toString();//force conversion\n    var str = '';\n    for (var i = 0; i < hex.length; i += 2)\n        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));\n    return str;\n}\n\nlet body = items.shift().json[\"body\"];\nif(body){\n  let chatId = body.conversation.contact_inbox.source_id;\n  if(chatId){\n    body.conversation.contact_inbox.source_id = hex2a(chatId); //chatId.hexDecode();\n  }\n  return body;\n}\nreturn {};"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        2620,
+        420
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"body\"][\"message_type\"]}}",
+              "value2": "outgoing"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        560,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "multiplex"
+      },
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1660,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json[\"content_type\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "text",
+              "output": 1
+            }
+          ]
+        },
+        "fallbackOutput": 0
+      },
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "content",
+              "value": "=*{{$json[\"sender\"][\"name\"]}}*: {{$json[\"content\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Update Content With Sender Name",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2160,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"body\"][\"private\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        840,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "only for outbound messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "Is Outgoing ?",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        800,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "do not forwarding private messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "Is Public ?",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "only for messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "Is Message Created Event ?",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        540,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$json[\"body\"][\"sender\"][\"type\"] == \"user\"}}"
+            }
+          ]
+        }
+      },
+      "name": "IF3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "do not forwarding bot messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "From Agent ?",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        820
+      ]
+    }
+  ],
+  "connections": {
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "From ChatWoot": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Message Created Event ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Outgoing ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Quepasa Info": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Content With Sender Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Content With Sender Name": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "IF3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Public ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF3": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "From Agent ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": 3,
+  "tags": []
+}

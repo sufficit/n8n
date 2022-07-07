@@ -12,7 +12,7 @@ import {
 } from 'n8n-workflow';
 
 import {
-	quepasaApiRequest,
+	apiRequest,
 	authorizationError,
 } from './GenericFunctions';
 
@@ -69,19 +69,18 @@ export class QuepasaTrigger implements INodeType {
 
 				// Check all the webhooks which exist already if it is identical to the
 				// one that is supposed to get created.				
-				const responseData = await quepasaApiRequest.call(this, 'GET', '', {});
+				const responseData = await apiRequest.call(this, 'GET', '', {});
 				return responseData.webhook == webhookUrl;
 			},
 			async create(this: IHookFunctions): Promise<boolean> {
 				const webhookData = this.getWorkflowStaticData('node');
 				const webhookUrl = this.getNodeWebhookUrl('default');
 
-				const endpoint = '/webhook';
 				const body = {
 					url: webhookUrl,
 				};
 
-				const responseData = await quepasaApiRequest.call(this, 'POST', endpoint, body);
+				const responseData = await apiRequest.call(this, 'POST', '/webhook', body);
 				if (responseData.id === undefined) {
 					// Required data is missing so was not successful
 					return false;
@@ -90,8 +89,15 @@ export class QuepasaTrigger implements INodeType {
 				webhookData.webhookId = responseData.id as string;
 				return true;
 			},
-			async delete(this: IHookFunctions): Promise<boolean> {
-				return true;
+			async delete(this: IHookFunctions): Promise<boolean> {	
+				const webhookUrl = this.getNodeWebhookUrl('default');			
+				const body = { url: webhookUrl, };
+				try {
+					await apiRequest.call(this, 'DELETE', '/webhook', body);
+					return true;
+				} catch {
+					return false;
+				}
 			},
 		},
 	};

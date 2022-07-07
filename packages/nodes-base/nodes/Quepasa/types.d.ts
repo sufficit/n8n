@@ -4,31 +4,11 @@ import {
 
 export declare namespace Quepasa {
 
-	export type Resource = 'contact' | 'group' | 'organization' | 'ticket' | 'user';
+	export type Resource = 'message' | 'webhook';
 
-	export type AuthMethod = 'basicAuth' | 'tokenAuth';
-
-	export type Credentials = BasicAuthCredentials | TokenAuthCredentials;
-
-	type CredentialsBase = {
+	export type PathCredentials = {
+		baseUrl: string;
 		accessToken: string;
-	}
-
-	export type BasicAuthCredentials = CredentialsBase & {
-		authType: 'basicAuth';
-		username: string;
-		password: string;
-	};
-
-	export type TokenAuthCredentials = CredentialsBase & {
-		authType: 'tokenAuth';
-	};
-
-	export type IdentityTokenReponse = {
-		access_token: string;
-		expires_in: number;
-		token_type: string;
-		scope: string;
 	}
 
 	export type UserAdditionalFields = IDataObject & Quepasa.CustomFieldsUi & Quepasa.AddressUi;

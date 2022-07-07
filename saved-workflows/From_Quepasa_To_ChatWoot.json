@@ -1,0 +1,1195 @@
+{
+  "name": "From Quepasa To ChatWoot",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        840
+      ]
+    },
+    {
+      "parameters": {},
+      "name": "Quepasa Trigger",
+      "type": "n8n-nodes-base.quepasaTrigger",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        1200
+      ],
+      "webhookId": "bf304d28-358b-46c6-b5a6-751274419a34",
+      "credentials": {
+        "quepasaTokenAuthApi": {
+          "id": "1",
+          "name": "Quepasa Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "return {\n  items: items.json,\n  host: \"https://chatwoot.sufficit.com.br\",\n  apiVersion: \"api/v1\",\n  inboxIdentifier: \"WJgZS1zG1Djtw4fqbaSfrnqX\",\n  inboxId: 6,  \n};"
+      },
+      "name": "Inbox",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -400,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return {\n  body:{\n    items: items.json,\n    chat: {\n      id: \"5521967609095-1594781801@g.us\",\n      title: \"Teste\"\n    },\n  },\n};"
+      },
+      "name": "Chat Info",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        840
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json}}",
+              "operation": "isEmpty"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1740,
+        760
+      ],
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "={{$node[\"Inbox\"].json[\"host\"]}}/{{$node[\"Inbox\"].json[\"apiVersion\"]}}/accounts/1/contacts/{{$json[\"contact\"][\"id\"]}}/conversations",
+        "allowUnauthorizedCerts": true,
+        "options": {}
+      },
+      "name": "Get Conversation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        1460,
+        760
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3",
+          "name": "ChatWoot UserToken"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "multiplex"
+      },
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        120,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "return {\n  body:{\n    items: items.json,\n    message_id: \"E9D45450FB8A757D9ED18D52A2DD8D91\",\n    timestamp: 1656714234,\n    controller: {\n      \"id\": \"5521967609095@c.us\"\n    },\n    replyto: {\n      id: \"5521967609095-1594781801@g.us\",\n      title: \"Teste\"\n    },\n    participant: {\n      id: \"5511953259249@s.whatsapp.net\",\n      title: \"-\"\n    },\n    fromme: false,\n    text: \"*Hugo Deco*: sdfsdfsdfsdf\",\n    chat: {\n      id: \"5521967609095-1594781801@g.us\",\n      title: \"Teste\"\n    },\n  },\n};"
+      },
+      "name": "Message Example",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        840
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "functionCode": "return items.shift()?.json.payload.find(x => x?.status === \"open\" ||  x?.status === \"pending\") ?? {};"
+      },
+      "name": "Function",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1600,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Inbox\"].json[\"host\"]}}/{{$node[\"Inbox\"].json[\"apiVersion\"]}}/accounts/1/conversations",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "contact_id",
+              "value": "={{$node[\"Get Chat Contact\"].json[\"id\"]}}"
+            },
+            {
+              "name": "status",
+              "value": "open"
+            },
+            {
+              "name": "inbox_id",
+              "value": "={{$node[\"Inbox\"].json[\"inboxId\"]}}"
+            },
+            {
+              "name": "source_id",
+              "value": "={{$node[\"Get Chat Contact\"].json[\"source_id\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Open a Conversation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        1960,
+        620
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "ChatWoot BotToken"
+        }
+      },
+      "notes": "Important to use \"source_id\" to respond messages"
+    },
+    {
+      "parameters": {
+        "mode": "multiplex"
+      },
+      "name": "Message + Conversation",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        3300,
+        1160
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "conversation.id",
+              "value": "={{$json[\"id\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Conversation Id",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2540,
+        780
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "multiplex"
+      },
+      "name": "Contact + Conversation",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "chatwoot",
+              "value": "={{$json}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        960
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "payload.content",
+              "value": "={{$json[\"text\"]}}"
+            },
+            {
+              "name": "payload.message_type",
+              "value": "={{$json[\"fromme\"]?\"outgoing\":\"incoming\"}}"
+            },
+            {
+              "name": "payload.echo_id",
+              "value": "={{$json[\"id\"]}}"
+            },
+            {
+              "name": "payload.attachment",
+              "value": "={{$json[\"attachment\"]}}"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "group",
+              "value": "={{Object.keys($json[\"participant\"]).length > 0}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Payload Echo + Content",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1360,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Inbox\"].json[\"host\"]}}/{{$node[\"Inbox\"].json[\"apiVersion\"]}}/accounts/1/conversations/{{$json[\"id\"]}}/toggle_status",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "status",
+              "value": "open"
+            }
+          ]
+        }
+      },
+      "name": "Open a Conversation1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        2160,
+        620
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "ChatWoot BotToken"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "id",
+              "value": "={{$json[\"payload\"][\"conversation_id\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Created Conversation Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        2340,
+        620
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Inbox\"].json[\"host\"]}}/{{$node[\"Inbox\"].json[\"apiVersion\"]}}/accounts/1/conversations/{{$json[\"chatwoot\"][\"conversation\"][\"id\"]}}/messages",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$json[\"payload\"]}}"
+      },
+      "name": "Post Outgoing Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        4300,
+        1080
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "ChatWoot BotToken"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Inbox\"].json[\"host\"]}}/public/{{$node[\"Inbox\"].json[\"apiVersion\"]}}/inboxes/{{$node[\"Inbox\"].json[\"inboxIdentifier\"]}}/contacts/{{$json[\"chatwoot\"][\"contact\"][\"source_id\"]}}/conversations/{{$json[\"chatwoot\"][\"conversation\"][\"id\"]}}/messages",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "={{$json[\"payload\"]}}"
+      },
+      "name": "Post Incoming Message",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        4580,
+        1520
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "ChatWoot BotToken"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "payload.source_id",
+              "value": "={{$json[\"chatwoot\"][\"contact\"][\"source_id\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        3780,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"payload\"][\"attachment\"]}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "name": "Has Attachment",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        4020,
+        980
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Inbox\"].json[\"host\"]}}/{{$node[\"Inbox\"].json[\"apiVersion\"]}}/accounts/1/conversations/{{$json[\"chatwoot\"][\"conversation\"][\"id\"]}}/messages",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "attachments[]:data"
+      },
+      "name": "Post Outgoing Message Attachment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        4480,
+        880
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "ChatWoot BotToken"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "messageId": "={{$json[\"payload\"][\"echo_id\"]}}"
+      },
+      "name": "Download",
+      "type": "n8n-nodes-base.quepasa",
+      "typeVersion": 1,
+      "position": [
+        4300,
+        880
+      ],
+      "credentials": {
+        "quepasaTokenAuthApi": {
+          "id": "1",
+          "name": "Quepasa Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$json[\"payload\"][\"message_type\"]==\"outgoing\"}}"
+            }
+          ]
+        }
+      },
+      "name": "Is Outgoing ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3540,
+        1160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"payload\"][\"attachment\"]}}",
+              "operation": "isNotEmpty"
+            }
+          ]
+        }
+      },
+      "name": "Has Attachment1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        4300,
+        1340
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "messageId": "={{$json[\"payload\"][\"echo_id\"]}}"
+      },
+      "name": "Download1",
+      "type": "n8n-nodes-base.quepasa",
+      "typeVersion": 1,
+      "position": [
+        4580,
+        1320
+      ],
+      "credentials": {
+        "quepasaTokenAuthApi": {
+          "id": "1",
+          "name": "Quepasa Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "requestMethod": "POST",
+        "url": "={{$node[\"Inbox\"].json[\"host\"]}}/public/{{$node[\"Inbox\"].json[\"apiVersion\"]}}/inboxes/{{$node[\"Inbox\"].json[\"inboxIdentifier\"]}}/contacts/{{$json[\"chatwoot\"][\"contact\"][\"source_id\"]}}/conversations/{{$json[\"chatwoot\"][\"conversation\"][\"id\"]}}/messages",
+        "allowUnauthorizedCerts": true,
+        "jsonParameters": true,
+        "options": {
+          "bodyContentType": "multipart-form-data"
+        },
+        "sendBinaryData": true,
+        "binaryPropertyName": "attachments[]:data"
+      },
+      "name": "Post Incoming Message Attachment",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        4760,
+        1320
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2",
+          "name": "ChatWoot BotToken"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "operation": "notEqual",
+              "value2": "={{$json[\"group\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Direct Message ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        3740,
+        1360
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "payload.content",
+              "value": "=**{{$json[\"chatwoot\"][\"participant\"][\"name\"]}}**: {{$json[\"payload\"][\"content\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Prepend Title",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        4020,
+        1440
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{Object.keys($json[\"participant\"]).length > 0}}"
+            }
+          ]
+        }
+      },
+      "name": "Has Participant ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        600,
+        860
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Inbox\"].json[\"host\"]}}/public/{{$node[\"Inbox\"].json[\"apiVersion\"]}}/inboxes/{{$node[\"Inbox\"].json[\"inboxIdentifier\"]}}/contacts",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "name",
+              "value": "={{$json[\"participant\"][\"title\"]}}"
+            },
+            {
+              "name": "source_id",
+              "value": "={{$json[\"participant\"][\"id\"]}}"
+            },
+            {
+              "name": "phone_number",
+              "value": "={{$json[\"participant\"][\"phone\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get Participant Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        800,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "requestMethod": "POST",
+        "url": "={{$node[\"Inbox\"].json[\"host\"]}}/public/{{$node[\"Inbox\"].json[\"apiVersion\"]}}/inboxes/{{$node[\"Inbox\"].json[\"inboxIdentifier\"]}}/contacts",
+        "allowUnauthorizedCerts": true,
+        "options": {},
+        "bodyParametersUi": {
+          "parameter": [
+            {
+              "name": "name",
+              "value": "={{$json[\"chat\"][\"title\"]}}"
+            },
+            {
+              "name": "source_id",
+              "value": "={{$json[\"chat\"][\"id\"]}}"
+            },
+            {
+              "name": "phone_number",
+              "value": "={{$json[\"chat\"][\"phone\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Get Chat Contact",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 2,
+      "position": [
+        600,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "participant",
+              "value": "={{$json}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Participant",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        980,
+        760
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "multiplex"
+      },
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 1,
+      "position": [
+        1220,
+        980
+      ]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": true,
+        "values": {
+          "string": [
+            {
+              "name": "contact",
+              "value": "={{$json}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Set Contact",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        780,
+        1040
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "function a2hex(str) {\n  var arr = [];\n  for (var i = 0, l = str.length; i < l; i ++) {\n    var hex = Number(str.charCodeAt(i)).toString(16);\n    arr.push(hex);\n  }\n  return arr.join('');\n}\n\nlet body = items.shift().json[\"body\"];\nif(body){\n\n  // Covering participant id\n  if(body.participant){\n\n    if(body.participant.id.length == 0)\n    {\n      delete body.participant;\n    } else {\n      body.participant.phone = \"+\" + body.participant.id.split('@').shift();\n      body.participant.id = a2hex(body.participant.id);\n    }\n  }\n\n  // Covering chat id\n  if(body.chat.id){\n    if(!body.participant){\n      body.chat.phone = \"+\" + body.chat.id.split('@').shift();\n    }\n    body.chat.id = a2hex(body.chat.id);\n  }\n  return body;\n}\nreturn {};"
+      },
+      "name": "Cover Ids & Set Phone",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        340,
+        1180
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "payload.content_type",
+              "value": "text"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "payload.private"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Payload Constants",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1640,
+        1180
+      ]
+    }
+  ],
+  "connections": {
+    "Quepasa Trigger": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Inbox": {
+      "main": [
+        [
+          {
+            "node": "Chat Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Info": {
+      "main": [
+        [
+          {
+            "node": "Message Example",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "Open a Conversation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Conversation Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Conversation": {
+      "main": [
+        [
+          {
+            "node": "Function",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Cover Ids & Set Phone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message Example": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open a Conversation": {
+      "main": [
+        [
+          {
+            "node": "Open a Conversation1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message + Conversation": {
+      "main": [
+        [
+          {
+            "node": "Is Outgoing ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conversation Id": {
+      "main": [
+        [
+          {
+            "node": "Contact + Conversation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contact + Conversation": {
+      "main": [
+        [
+          {
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "Message + Conversation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Payload Echo + Content": {
+      "main": [
+        [
+          {
+            "node": "Payload Constants",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open a Conversation1": {
+      "main": [
+        [
+          {
+            "node": "Created Conversation Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Created Conversation Payload": {
+      "main": [
+        [
+          {
+            "node": "Conversation Id",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Inbox",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Attachment": {
+      "main": [
+        [
+          {
+            "node": "Download",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Post Outgoing Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download": {
+      "main": [
+        [
+          {
+            "node": "Post Outgoing Message Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Outgoing ?": {
+      "main": [
+        [
+          {
+            "node": "Set1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Direct Message ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set1": {
+      "main": [
+        [
+          {
+            "node": "Has Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Attachment1": {
+      "main": [
+        [
+          {
+            "node": "Download1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Post Incoming Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download1": {
+      "main": [
+        [
+          {
+            "node": "Post Incoming Message Attachment",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Direct Message ?": {
+      "main": [
+        [
+          {
+            "node": "Has Attachment1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepend Title",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepend Title": {
+      "main": [
+        [
+          {
+            "node": "Has Attachment1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Participant ?": {
+      "main": [
+        [
+          {
+            "node": "Get Participant Contact",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Chat Contact": {
+      "main": [
+        [
+          {
+            "node": "Set Contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Participant Contact": {
+      "main": [
+        [
+          {
+            "node": "Set Participant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Participant": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Get Conversation",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Contact + Conversation",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Set Contact": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Cover Ids & Set Phone": {
+      "main": [
+        [
+          {
+            "node": "Get Chat Contact",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Has Participant ?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Payload Echo + Content",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Payload Constants": {
+      "main": [
+        [
+          {
+            "node": "Message + Conversation",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": 2,
+  "tags": []
+}

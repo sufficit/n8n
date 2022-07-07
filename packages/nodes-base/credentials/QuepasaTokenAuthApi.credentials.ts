@@ -27,21 +27,4 @@ export class QuepasaTokenAuthApi implements ICredentialType {
 			required: true,
 		},
 	];
-
-	test: ICredentialTestRequest = {
-		request: {
-			baseURL: '{{$credentials?.baseUrl}}',
-			url: '/v3/bot/{{$credentials?.accessToken}}',
-		},
-		rules: [
-			{
-				type: 'responseSuccessBody',
-				properties: {
-					key: 'error',
-					value: 'invalid_auth',
-					message: 'Invalid access token',
-				},
-			},
-		],
-	};
 }
