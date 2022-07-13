@@ -20,6 +20,11 @@ import {
 } from './descriptions';
 
 import {
+	resourceMessage,
+	resourceWebhook,
+} from './methods';
+
+import {
 	apiRequest,
 	requestBotInfo,
 } from './GenericFunctions';
@@ -56,6 +61,10 @@ export class Quepasa implements INodeType {
 					noDataExpression: true,
 					options: [
 						{
+							name: 'Information',
+							value: 'information',
+						},
+						{
 							name: 'Message',
 							value: 'message',
 						},
@@ -65,6 +74,21 @@ export class Quepasa implements INodeType {
 						},
 					],
 					default: 'message',
+					required: true,
+				},
+				{
+					displayName: 'Operation',
+					name: 'operation',
+					type: 'hidden',
+					noDataExpression: true,
+					displayOptions: {
+						show: {
+							resource: [
+								'information',
+							],
+						},
+					},
+					default: 'information',
 					required: true,
 				},
 				...messageDescription,
@@ -100,44 +124,23 @@ export class Quepasa implements INodeType {
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
-
 		const resource = this.getNodeParameter('resource', 0) as Types.Resource;
-		const operation = this.getNodeParameter('operation', 0) as string;
-
-		let responseData;
+		const operation = this.getNodeParameter('operation', 0) as string;		
 		const returnData: IDataObject[] = [];
 
 		for (let i = 0; i < items.length; i++) {
-
+			let responseData;
 			try {
-				if (resource === 'message') {
-					if (operation === 'download') {
-						const qs: IDataObject = {};
-						const objectId = this.getNodeParameter('messageId', i) as string;
-						qs.id = objectId;
-						responseData = await apiRequest.call(this, 'GET', '/download/message', {}, qs);
+				if (resource === 'information'){		
+					responseData = await apiRequest.call(this, 'GET');						
+				} 
+				else if (resource === 'message') {
+					responseData = await resourceMessage.call(this, operation, items, i)
+				} 
+				else if (resource === 'webhook') {
+					responseData = await resourceWebhook.call(this, operation, items, i)
+				}					
 
-						const newItem: INodeExecutionData = {
-							json: items[i].json,
-							binary: {},
-						};
-
-						if (items[i].binary !== undefined) {
-							// Create a shallow copy of the binary data so that the old
-							// data references which do not get changed still stay behind
-							// but the incoming data does not get changed.
-							Object.assign(newItem.binary, items[i].binary);
-						}
-
-						items[i] = newItem;
-
-						const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
-						items[i].binary![binaryPropertyName] = await this.helpers.prepareBinaryData(responseData.data);
-						if(!items[i].binary![binaryPropertyName].fileName)
-							items[i].binary![binaryPropertyName].fileName = "unknownFileName";
-					}
-				}
-			
 				if (Array.isArray(responseData)) {
 					returnData.push.apply(returnData, responseData as IDataObject[]);
 				} else if (responseData !== undefined) {
@@ -145,7 +148,7 @@ export class Quepasa implements INodeType {
 				}
 			} catch (error) {
 				if (this.continueOnFail()) {
-					if (resource === 'message' && operation === 'download') {
+					if (operation === 'download') {
 						items[i].json = { error: error.message };
 					} else {
 						returnData.push({ error: error.message });
@@ -156,7 +159,7 @@ export class Quepasa implements INodeType {
 			}
 		}
 
-		if (resource === 'message' && operation === 'download') {
+		if (operation === 'download') {
 			// For file downloads the files get attached to the existing items
 			return this.prepareOutputData(items);
 		} else {

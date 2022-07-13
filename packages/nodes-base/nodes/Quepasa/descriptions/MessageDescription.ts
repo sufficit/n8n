@@ -30,9 +30,14 @@ export const messageDescription: INodeProperties[] = [
 				name: 'Download',
 				value: 'download',
 				description: 'Download a message attachment',
+			},			
+			{
+				name: 'Send',
+				value: 'send',
+				description: 'Send a message',
 			},
 		],
-		default: 'find',
+		default: 'send',
 	},
 ];
 
@@ -122,5 +127,146 @@ export const messageFields: INodeProperties[] = [
 		},
 		placeholder: '',
 		description: 'Name of the binary property which contains the data for the file to be created',
+	},
+
+	// --------------------------------------------------------------------------
+	// message:send -> operation:send
+	// --------------------------------------------------------------------------	
+	{
+		displayName: 'Method',
+		name: 'method',
+		type: 'options',
+		noDataExpression: true,
+		displayOptions: {
+			show: {
+				resource: [
+					'message',
+				],
+				operation: [
+					'send',
+				],
+			},
+		},
+		options: [
+			{
+				name: 'Send Text',
+				value: 'sendtext',
+			},
+			{
+				name: 'Send Attachment By Url',
+				value: 'sendurl',
+			},
+			{
+				name: 'Send Attachment Binary',
+				value: 'sendbinary',
+			},
+			{
+				name: 'Send Attachment Base64',
+				value: 'sendencoded',
+			},
+		],
+		default: 'sendtext',
+	},
+	{
+		displayName: 'Text',
+		name: 'text',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: [
+					'message',
+				],
+				operation: [
+					'send'
+				],
+				method:[
+					'sendtext'
+				],
+			},
+		},
+		default: '',
+		description: 'Text message',
+	},	
+	{
+		displayName: 'Label',
+		name: 'label',
+		type: 'string',
+		required: false,
+		displayOptions: {
+			show: {
+				resource: [
+					'message',
+				],
+				operation: [
+					'send'
+				],
+				method:[
+					'sendurl', 'sendbinary', 'sendencoded'
+				],
+			},
+		},
+		default: '',
+		description: 'Label for images',
+	},
+	{
+		displayName: 'Chat Id',
+		name: 'recipient',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: [
+					'message',
+				],
+				operation: [
+					'send'
+				],
+			},
+		},
+		default: '',
+		description: 'Destination conversation, ChatId Group or any E164 Phone Number',
+	},
+	{
+		displayName: 'Url',
+		name: 'url',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: [
+					'message',
+				],
+				operation: [
+					'send'
+				],
+				method: [
+					'sendurl'
+				],
+			},
+		},
+		default: '',
+		description: 'Url path to append attachment',
+	},
+	{
+		displayName: 'File Name',
+		name: 'filename',
+		type: 'string',
+		required: false,
+		displayOptions: {
+			show: {
+				resource: [
+					'message',
+				],
+				operation: [
+					'send'
+				],
+				method: [
+					'sendurl', 'sendbinary', 'sendencoded'
+				],
+			},
+		},
+		default: '',
+		description: 'File name and extension, auto-generated',
 	},
 ];

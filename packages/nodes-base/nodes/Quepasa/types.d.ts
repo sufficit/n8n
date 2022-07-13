@@ -2,9 +2,14 @@ import {
 	IDataObject,
 } from 'n8n-workflow';
 
+import {
+	OptionsWithUri,
+} from 'request';
+
 export declare namespace Quepasa {
 
-	export type Resource = 'message' | 'webhook';
+	export type Resource = 'information' | 'message' | 'webhook';
+	export type Endpoint = '' | '/webhook' | '/download' | '/sendtext' | '/sendurl';
 
 	export type PathCredentials = {
 		baseUrl: string;
@@ -19,7 +24,26 @@ export declare namespace Quepasa {
 		active: boolean;
 		id: number;
 		name: string;
+	};	
+
+	// --------------------------------------------------------------------------
+	// message:send -> operation:send methods
+	// 	
+
+	export type SendTextRequest = {
+		recipient: string;
+		message: string;
 	};
+
+	export type SendAttachmentUrlRequest = {
+		chatid: string;
+		url: string;
+		filename: string;
+		textlabel: string;
+	};
+	
+	// 
+	// --------------------------------------------------------------------------
 
 	export type Group = Organization;
 

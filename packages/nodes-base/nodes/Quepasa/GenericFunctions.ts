@@ -27,7 +27,13 @@ import type { Quepasa } from './types';
 // used from webhook authorization, avoid bots
 import { Response } from 'express';
 
-export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions, method: string, endpoint: string, body: any = {}, qs: IDataObject = {}, uri?: string, headers: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
+class RequestError extends Error {
+	constructor(public options: OptionsWithUri, status: number, message: string) {
+		super(message)
+	}
+}
+
+export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions, method: string, endpoint: Quepasa.Endpoint = '', body: any = {}, qs: IDataObject = {}, uri?: string, headers: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
 	const credentials = await this.getCredentials('quepasaTokenAuthApi');
 
 	let fullUri = credentials.baseUrl;
@@ -42,7 +48,7 @@ export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoa
 		uri: uri || fullUri,
 	};
 
-	if (endpoint === '/download/message') {
+	if (endpoint === '/download') {
 		options.encoding = null;
 	} else {
 		options.json = true;
@@ -53,15 +59,13 @@ export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoa
 	}
 
 	qs = qs || {};
-
 	if (options.qs && Object.keys(options.qs).length === 0) {
 		delete options.qs;
 	}
 
-	try {	
+	try {							
 		const responseData = await this.helpers.request!(options);
-				
-		if (endpoint === '/download/message') {
+		if (endpoint === '/download') {
 			return {
 				data: responseData,
 			};
@@ -71,11 +75,9 @@ export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoa
 			throw new NodeApiError(this.getNode(), responseData);
 		}
 
-		return {
-			additionalData: responseData.additional_data,
-			data: (responseData.data === null) ? [] : responseData.data,
-		};
+		return responseData;
 	} catch (error) {
+		error = new RequestError(options, error.status, error.message);
 		throw new NodeApiError(this.getNode(), error);
 	}
 }
