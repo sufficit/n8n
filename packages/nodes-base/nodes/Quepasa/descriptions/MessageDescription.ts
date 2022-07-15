@@ -269,4 +269,22 @@ export const messageFields: INodeProperties[] = [
 		default: '',
 		description: 'File name and extension, auto-generated',
 	},
+	{
+		displayName: 'Track Id',
+		name: 'trackId',
+		type: 'string',
+		default: '',
+		required: false,
+		description: '(Optional) System identifier, avoid duplicated messages',
+		displayOptions: {
+			show: {
+				resource: [
+					'message',
+				],
+				operation: [
+					'send'
+				],
+			},
+		},
+	},
 ];

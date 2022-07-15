@@ -54,6 +54,10 @@ export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoa
 		options.json = true;
 	}
 
+	if (Object.keys(headers).length !== 0) {
+		options.headers = Object.assign({}, options.headers, headers);
+	}
+	
 	if (Object.keys(body).length !== 0) {
 		options.body = body;
 	}

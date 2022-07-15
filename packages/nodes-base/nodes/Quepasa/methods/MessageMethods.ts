@@ -56,26 +56,31 @@ export async function resourceMessage(this: IExecuteFunctions, operation: string
 	else if (operation === 'send'){
 		const method = this.getNodeParameter('method', i) as string;
 		const Recipient = this.getNodeParameter('recipient', i) as string;
+		const TrackId = this.getNodeParameter('trackId', i) as string;
+
+		const headers: IDataObject = {
+			'X-QUEPASA-TRACKID': TrackId
+		};
 
 		if (method === 'sendtext') {					
 			const Message = this.getNodeParameter('text', i) as string;	
-			let request: Quepasa.SendTextRequest = {
+			let body: Quepasa.SendTextRequest = {
 				message: Message,
 				recipient: Recipient,
 			};
-			responseData = await apiRequest.call(this, 'POST', '/sendtext', request);			
+			responseData = await apiRequest.call(this, 'POST', '/sendtext', body, {}, undefined, headers);			
 		} 
 		else if (method === 'sendurl') {
 			const Url = this.getNodeParameter('url', i) as string;
 			const FileName = this.getNodeParameter('filename', i) as string;			
 			const Label = this.getNodeParameter('label', i) as string;
-			let request: Quepasa.SendAttachmentUrlRequest = {
+			let body: Quepasa.SendAttachmentUrlRequest = {
 				chatid: Recipient,
 				url: Url,
 				textlabel: Label,
 				filename: FileName,
 			};
-			responseData = await apiRequest.call(this, 'POST', '/sendurl', request);	
+			responseData = await apiRequest.call(this, 'POST', '/sendurl', body, {}, undefined, headers);	
 		}	
 	} 
 	else if (operation === 'where') {
