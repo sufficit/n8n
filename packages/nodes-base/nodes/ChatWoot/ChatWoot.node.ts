@@ -15,41 +15,41 @@ import {
 } from 'n8n-workflow';
 
 import {
-	messageDescription, messageFields,
-	webhookDescription, webhookFields,
+	accountDescription,
+	publicDescription,
 } from './descriptions';
 
 import {
-	resourceMessage,
-	resourceWebhook,
+	resourceAccount,
+	resourcePublic,
 } from './methods';
 
 import {
 	apiRequest,
-	requestBotInfo,
+	requestAccountOptions,
 } from './GenericFunctions';
 
-import type { Quepasa as Types } from './types';
+import type { ChatWoot as Types } from './types';
 
-export class Quepasa implements INodeType {
+export class ChatWoot implements INodeType {
 	description: INodeTypeDescription = {
-			displayName: 'Quepasa (Whatsapp)',
-			name: 'quepasa',
-			icon: 'file:quepasa.png',
-			group: ['output'],
+			displayName: 'ChatWoot',
+			name: 'chatwoot',
+			icon: 'file:chatwoot.svg',
+			group: ['transform'],
 			version: 1,
 			subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-			description: 'Non Official Whatsapp API',
+			description: 'Consume ChatWoot API',
 			defaults: {
-					name: 'Quepasa',
+					name: 'ChatWoot',
 					color: '#1A82e2',
 			},
 			inputs: ['main'],
 			outputs: ['main'],
 			credentials: [
 				{
-					name: 'quepasaTokenAuthApi',
-					testedBy: 'quepasaTokenAuthApiTest',
+					name: 'chatWootToken',
+					testedBy: 'chatWootTokenTest',
 					required: true,
 				},
 			],
@@ -61,51 +61,30 @@ export class Quepasa implements INodeType {
 					noDataExpression: true,
 					options: [
 						{
-							name: 'Information',
-							value: 'information',
+							name: 'Account',
+							value: 'account',
 						},
 						{
-							name: 'Message',
-							value: 'message',
-						},
-						{
-							name: 'Webhook',
-							value: 'webhook',
+							name: 'Public',
+							value: 'public',
 						},
 					],
-					default: 'message',
+					default: 'account',
 					required: true,
 				},
-				{
-					displayName: 'Operation',
-					name: 'operation',
-					type: 'hidden',
-					noDataExpression: true,
-					displayOptions: {
-						show: {
-							resource: [
-								'information',
-							],
-						},
-					},
-					default: 'information',
-					required: true,
-				},
-				...messageDescription,
-				...messageFields,
-				...webhookDescription,
-				...webhookFields,
+				...accountDescription,
+				...publicDescription,
 			],
 	};
 
 	methods = {
 		credentialTest: {
-			async quepasaTokenAuthApiTest(
+			async chatWootTokenTest(
 				this: ICredentialTestFunctions,
 				credential: ICredentialsDecrypted,
 			): Promise<INodeCredentialTestResult> {
-				const credentials = credential.data as Types.PathCredentials;
-				const options = requestBotInfo(credentials)
+				const credentials = credential.data as Types.Credentials;
+				const options = requestAccountOptions(credentials)
 				try {
 					await this.helpers.request(options);
 					return {
@@ -131,40 +110,32 @@ export class Quepasa implements INodeType {
 		for (let i = 0; i < items.length; i++) {
 			let responseData;
 			try {
-				if (resource === 'information'){		
-					responseData = await apiRequest.call(this, 'GET');						
+				if (resource === 'account'){	
+					responseData = await resourceAccount.call(this, operation, items, i);						
 				} 
-				else if (resource === 'message') {
-					responseData = await resourceMessage.call(this, operation, items, i)
+				else if (resource === 'public') {
+					responseData = await resourcePublic.call(this, operation, items, i)
 				} 
+				/*
 				else if (resource === 'webhook') {
 					responseData = await resourceWebhook.call(this, operation, items, i)
 				}					
-
+				*/
 				if (Array.isArray(responseData)) {
 					returnData.push.apply(returnData, responseData as IDataObject[]);
 				} else if (responseData !== undefined) {
 					returnData.push(responseData as IDataObject);
 				}
 			} catch (error) {
-				if (this.continueOnFail()) {
-					if (operation === 'download') {
-						items[i].json = { error: error.message };
-					} else {
-						returnData.push({ error: error.message });
-					}
+				if (this.continueOnFail()) {					
+					returnData.push({ error: error.message });					
 					continue;
 				}
 				throw error;
 			}
 		}
 
-		if (operation === 'download') {
-			// For file downloads the files get attached to the existing items
-			return this.prepareOutputData(items);
-		} else {
-			// For all other ones does the output items get replaced
-			return [this.helpers.returnJsonArray(returnData)];
-		}
+		// For all other ones does the output items get replaced
+		return [this.helpers.returnJsonArray(returnData)];		
 	}
 }
