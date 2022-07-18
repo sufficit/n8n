@@ -48,10 +48,11 @@ export async function resourceMessage(this: IExecuteFunctions, operation: string
 
 		items[i] = newItem;
 
+		const fileName = this.getNodeParameter('fileName', i) as string;		
+		const binaryData = await this.helpers.prepareBinaryData(responseData.data, fileName || "unknownFileName");
+		
 		const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
-		items[i].binary![binaryPropertyName] = await this.helpers.prepareBinaryData(responseData.data);
-		if(!items[i].binary![binaryPropertyName].fileName)
-			items[i].binary![binaryPropertyName].fileName = "unknownFileName";
+		items[i].binary![binaryPropertyName] = binaryData;
 	} 
 	else if (operation === 'send'){
 		const method = this.getNodeParameter('method', i) as string;

@@ -128,7 +128,26 @@ export const messageFields: INodeProperties[] = [
 		placeholder: '',
 		description: 'Name of the binary property which contains the data for the file to be created',
 	},
+	{
+		displayName: 'File Name',
+		name: 'fileName',
+		type: 'string',
+		default: '',
+		displayOptions: {
+			show: {
+				resource: [
+					'message',
+				],
+				operation: [
+					'download',
+				],				
+			},
 
+		},
+		placeholder: 'downloaded.pdf',
+		description: '(Optional) File name to be outputed if setted',
+	},
+	
 	// --------------------------------------------------------------------------
 	// message:send -> operation:send
 	// --------------------------------------------------------------------------	
