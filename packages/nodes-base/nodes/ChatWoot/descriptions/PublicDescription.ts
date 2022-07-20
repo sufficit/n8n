@@ -144,4 +144,46 @@ export const publicDescription: INodeProperties[] = [
 		default: '',
 		description: '(Optional) External API Contact identifier, *URL Escaped - valid query parameter',
 	},
+	{
+		displayName: 'Custom Attributes',
+		name: 'customAttributes',
+		placeholder: 'Add Attributes',
+		type: 'fixedCollection',
+		typeOptions: {
+			multipleValues: true,
+		},
+		displayOptions: {
+			show: {
+				resource: [
+					'public',
+				],
+				operation:[
+					'contactCreate',
+				]
+			},
+		},
+		default: {},
+		options: [
+			{
+				name: 'attribute',
+				displayName: 'Attributes',
+				values: [
+					{
+						displayName: 'Key',
+						name: 'key',
+						type: 'string',
+						default: '',
+						description: 'Key of the attribute',
+					},
+					{
+						displayName: 'Value',
+						name: 'value',
+						type: 'string',
+						default: '',
+						description: 'Value to set for the attribute',
+					},
+				],
+			},
+		],
+	},
 ];

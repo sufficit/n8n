@@ -3,6 +3,10 @@ import {
 } from 'n8n-core';
 
 import {
+	IDataObject,
+} from 'n8n-workflow';
+
+import {
 	apiRequest,
 } from '../GenericFunctions';
 
@@ -28,6 +32,20 @@ export async function resourcePublic(this: IExecuteFunctions, operation: string,
 			phone_number: contactPhoneNumber,
 			source_id: contactIdentifier,
 		};
+
+		// Handle custom headers
+		let customAttributes = this.getNodeParameter('customAttributes', i) as IDataObject;		
+		if (customAttributes) {
+			const data: any = {}; // tslint:disable-line:no-any
+
+			//@ts-ignore
+			customAttributes.attribute.map(property => {
+				data[property.key] = property.value;
+			});
+
+			body.custom_attributes = data;
+		}
+
 		responseData = await apiRequest.call(this, 'POST', endpoint, body);
 	} 
 	else if (operation === 'contact'){

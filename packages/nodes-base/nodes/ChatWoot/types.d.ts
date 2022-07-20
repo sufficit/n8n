@@ -1,8 +1,4 @@
 import {
-	IDataObject,
-} from 'n8n-workflow';
-
-import {
 	OptionsWithUri,
 } from 'request';
 
@@ -21,5 +17,6 @@ export declare namespace ChatWoot {
 		phone_number: string;
 		source_id?: string;
 		identifier?: string;
+		custom_attributes?: any;
 	};
 }

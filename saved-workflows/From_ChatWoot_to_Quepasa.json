@@ -1,5 +1,5 @@
 {
-  "name": "From ChatWoot to Quepasa",
+  "name": "(+5511953259249) From ChatWoot to Quepasa",
   "nodes": [
     {
       "parameters": {},
@@ -7,98 +7,9 @@
       "type": "n8n-nodes-base.start",
       "typeVersion": 1,
       "position": [
-        -140,
-        240
+        80,
+        480
       ]
-    },
-    {
-      "parameters": {
-        "keepOnlySet": true,
-        "values": {
-          "string": [
-            {
-              "name": "content",
-              "value": "{   \"headers\": {     \"host\": \"n8n.sufficit.com.br\",     \"user-agent\": \"rest-client/2.1.0 (linux x86_64) ruby/3.0.4p208\",     \"content-length\": \"2656\",     \"accept\": \"application/json\",     \"accept-encoding\": \"gzip;q=1.0,deflate;q=0.6,identity;q=0.3\",     \"content-type\": \"application/json\",     \"x-forwarded-for\": \"187.108.193.40\",     \"x-forwarded-host\": \"n8n.sufficit.com.br\",     \"x-forwarded-port\": \"443\",     \"x-forwarded-proto\": \"https\",     \"x-forwarded-server\": \"c45ce109d129\",     \"x-real-ip\": \"187.108.193.40\"   },   \"params\": {},   \"query\": {},   \"body\": {     \"account\": {       \"id\": 1,       \"name\": \"Sufficit\"     },     \"additional_attributes\": {},     \"content_attributes\": {},     \"content_type\": \"text\",     \"content\": \"poi\",     \"conversation\": {       \"additional_attributes\": {         \"mail_subject\": \"\"       },       \"can_reply\": true,       \"channel\": \"Channel::Api\",       \"contact_inbox\": {         \"id\": 2,         \"contact_id\": 1,         \"inbox_id\": 2,         \"source_id\": \"1ef4c7c1-24e9-4a4b-aab2-b80832035d99\",         \"created_at\": \"2022-06-25T18:47:27.184Z\",         \"updated_at\": \"2022-06-25T18:47:27.184Z\",         \"hmac_verified\": false,         \"pubsub_token\": \"snyZ1ks2QP5a9p4yv37HWjT5\"       },       \"id\": 2,       \"inbox_id\": 2,       \"messages\": [         {           \"id\": 20,           \"content\": \"poi\",           \"account_id\": 1,           \"inbox_id\": 2,           \"conversation_id\": 2,           \"message_type\": 1,           \"created_at\": 1656182969,           \"updated_at\": \"2022-06-25T18:49:29.479Z\",           \"private\": false,           \"status\": \"sent\",           \"source_id\": null,           \"content_type\": \"text\",           \"content_attributes\": {},           \"sender_type\": \"User\",           \"sender_id\": 1,           \"external_source_ids\": {},           \"additional_attributes\": {},           \"conversation\": {             \"assignee_id\": 1           },           \"sender\": {             \"id\": 1,             \"name\": \"Hugo Castro de Deco\",             \"available_name\": \"Hugo Castro de Deco\",             \"avatar_url\": \"https://www.gravatar.com/avatar/9f6478116ce1ed7ff7f3b8dd8e747db9?d=404\",             \"type\": \"user\",             \"availability_status\": null,             \"thumbnail\": \"https://www.gravatar.com/avatar/9f6478116ce1ed7ff7f3b8dd8e747db9?d=404\"           }         }       ],       \"meta\": {         \"sender\": {           \"additional_attributes\": {             \"username\": \"hugodeco\",             \"description\": \"\",             \"company_name\": \"\",             \"language_code\": \"pt-br\",             \"social_profiles\": {               \"github\": \"\",               \"twitter\": \"\",               \"facebook\": \"\",               \"linkedin\": \"\"             }           },           \"custom_attributes\": {},           \"email\": null,           \"id\": 1,           \"identifier\": null,           \"name\": \"Hugo Deco\",           \"phone_number\": \"\",           \"thumbnail\": \"https://chatwoot.sufficit.com.br/rails/active_storage/representations/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCZz09IiwiZXhwIjpudWxsLCJwdXIiOiJibG9iX2lkIn19--fbbce2439a64bb5e3fe20a25cc8b93ca7f9ee1eb/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBJZ2hxY0djNkMzSmxjMmw2WlVraURESTFNSGd5TlRBR09nWkZWQT09IiwiZXhwIjpudWxsLCJwdXIiOiJ2YXJpYXRpb24ifX0=--f0cba2d9dcf8b91ab298d17f8812348b17220477/file_13.jpg\",           \"type\": \"contact\"         },         \"assignee\": {           \"id\": 1,           \"name\": \"Hugo Castro de Deco\",           \"available_name\": \"Hugo Castro de Deco\",           \"avatar_url\": \"https://www.gravatar.com/avatar/9f6478116ce1ed7ff7f3b8dd8e747db9?d=404\",           \"type\": \"user\",           \"availability_status\": null,           \"thumbnail\": \"https://www.gravatar.com/avatar/9f6478116ce1ed7ff7f3b8dd8e747db9?d=404\"         },         \"hmac_verified\": false       },       \"status\": \"open\",       \"custom_attributes\": {},       \"snoozed_until\": null,       \"unread_count\": 0,       \"agent_last_seen_at\": 1656182969,       \"contact_last_seen_at\": 0,       \"timestamp\": 1656182969     },     \"created_at\": \"2022-06-25T18:49:29.479Z\",     \"id\": 20,     \"inbox\": {       \"id\": 2,       \"name\": \"Whatsapp\"     },     \"message_type\": \"outgoing\",     \"private\": false,     \"sender\": {       \"id\": 1,       \"name\": \"Hugo Castro de Deco\",       \"email\": \"hugodeco@sufficit.com.br\",       \"type\": \"user\"     },     \"source_id\": null,     \"event\": \"message_created\"   } }"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Set",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        20,
-        240
-      ],
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "functionCode": "return [{json: JSON.parse(items.shift().json.content)}]"
-      },
-      "name": "Function",
-      "type": "n8n-nodes-base.function",
-      "typeVersion": 1,
-      "position": [
-        160,
-        240
-      ],
-      "disabled": true
-    },
-    {
-      "parameters": {
-        "requestMethod": "POST",
-        "url": "={{$json[\"quepasa\"][\"baseUrl\"]}}/v2/bot/{{$json[\"quepasa\"][\"token\"]}}/sendtext",
-        "allowUnauthorizedCerts": true,
-        "options": {},
-        "bodyParametersUi": {
-          "parameter": [
-            {
-              "name": "recipient",
-              "value": "={{$json[\"conversation\"][\"contact_inbox\"][\"source_id\"]}}"
-            },
-            {
-              "name": "message",
-              "value": "={{$json[\"content\"]}}"
-            }
-          ]
-        }
-      },
-      "name": "HTTP Request",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 2,
-      "position": [
-        2420,
-        420
-      ]
-    },
-    {
-      "parameters": {
-        "keepOnlySet": true,
-        "values": {
-          "string": [
-            {
-              "name": "quepasa.token",
-              "value": "40d5bb94-2f37-447f-9e2e-419b3b6940d0"
-            },
-            {
-              "name": "quepasa.baseUrl",
-              "value": "http://chatwoot.sufficit.com.br:31000"
-            }
-          ]
-        },
-        "options": {}
-      },
-      "name": "Quepasa Info",
-      "type": "n8n-nodes-base.set",
-      "typeVersion": 1,
-      "position": [
-        620,
-        60
-      ],
-      "alwaysOutputData": true,
-      "executeOnce": true
     },
     {
       "parameters": {
@@ -111,8 +22,8 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
-        100,
-        600
+        80,
+        700
       ],
       "webhookId": "f1e9aab8-71a6-4853-b648-bf41f2b5a93f"
     },
@@ -158,8 +69,8 @@
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
-        2620,
-        420
+        2780,
+        320
       ]
     },
     {
@@ -183,18 +94,6 @@
     },
     {
       "parameters": {
-        "mode": "multiplex"
-      },
-      "name": "Merge",
-      "type": "n8n-nodes-base.merge",
-      "typeVersion": 1,
-      "position": [
-        1660,
-        460
-      ]
-    },
-    {
-      "parameters": {
         "dataType": "string",
         "value1": "={{$json[\"content_type\"]}}",
         "rules": {
@@ -211,8 +110,8 @@
       "type": "n8n-nodes-base.switch",
       "typeVersion": 1,
       "position": [
-        1880,
-        460
+        1580,
+        480
       ]
     },
     {
@@ -231,8 +130,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 1,
       "position": [
-        2160,
-        540
+        1820,
+        580
       ]
     },
     {
@@ -251,54 +150,6 @@
       "position": [
         840,
         560
-      ]
-    },
-    {
-      "parameters": {
-        "respondWith": "text",
-        "responseBody": "only for outbound messages",
-        "options": {
-          "responseCode": 204
-        }
-      },
-      "name": "Is Outgoing ?",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [
-        800,
-        820
-      ]
-    },
-    {
-      "parameters": {
-        "respondWith": "text",
-        "responseBody": "do not forwarding private messages",
-        "options": {
-          "responseCode": 204
-        }
-      },
-      "name": "Is Public ?",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [
-        1040,
-        820
-      ]
-    },
-    {
-      "parameters": {
-        "respondWith": "text",
-        "responseBody": "only for messages",
-        "options": {
-          "responseCode": 204
-        }
-      },
-      "name": "Is Message Created Event ?",
-      "type": "n8n-nodes-base.respondToWebhook",
-      "typeVersion": 1,
-      "position": [
-        540,
-        820
       ]
     },
     {
@@ -322,13 +173,133 @@
     },
     {
       "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"conversation\"][\"messages\"][0][\"attachments\"]}}",
+              "operation": "isEmpty"
+            }
+          ]
+        }
+      },
+      "name": "IF4",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = [];\n\nfor (item of items) {\n  let attachs = item.json.conversation.messages.shift().attachments;\n  for(attach of attachs){\n    response.push({\n      recipient: item.json.conversation.contact_inbox.source_id,\n      url: attach.data_url\n    })\n  }\n}\n\nreturn response;"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "text": "={{$json[\"content\"]}}",
+        "recipient": "={{$json[\"conversation\"][\"contact_inbox\"][\"source_id\"]}}",
+        "trackId": "chatwoot"
+      },
+      "name": "Send Text",
+      "type": "n8n-nodes-base.quepasa",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        320
+      ],
+      "credentials": {
+        "quepasaTokenAuthApi": {
+          "id": "1",
+          "name": "(+5511953259249) Quepasa Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "sendurl",
+        "recipient": "={{$json[\"recipient\"]}}",
+        "url": "={{$json[\"url\"]}}",
+        "trackId": "chatwoot"
+      },
+      "name": "Send Attach",
+      "type": "n8n-nodes-base.quepasa",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        560
+      ],
+      "credentials": {
+        "quepasaTokenAuthApi": {
+          "id": "1",
+          "name": "(+5511953259249) Quepasa Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "only for messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "Not Message Created Event !",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        540,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "only for outbound messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "Is Incoming !",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        800,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "do not forwarding private messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "Is Private !",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        820
+      ]
+    },
+    {
+      "parameters": {
         "respondWith": "text",
         "responseBody": "do not forwarding bot messages",
         "options": {
           "responseCode": 204
         }
       },
-      "name": "From Agent ?",
+      "name": "From Customer !",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
       "position": [
@@ -338,17 +309,6 @@
     }
   ],
   "connections": {
-    "Set": {
-      "main": [
-        [
-          {
-            "node": "Function",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "From ChatWoot": {
       "main": [
         [
@@ -371,7 +331,7 @@
         ],
         [
           {
-            "node": "Is Message Created Event ?",
+            "node": "Not Message Created Event !",
             "type": "main",
             "index": 0
           }
@@ -382,9 +342,9 @@
       "main": [
         [
           {
-            "node": "Merge",
+            "node": "Switch",
             "type": "main",
-            "index": 1
+            "index": 0
           }
         ]
       ]
@@ -400,40 +360,7 @@
         ],
         [
           {
-            "node": "Is Outgoing ?",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "HTTP Request": {
-      "main": [
-        [
-          {
-            "node": "Respond to Webhook1",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Merge": {
-      "main": [
-        [
-          {
-            "node": "Switch",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Quepasa Info": {
-      "main": [
-        [
-          {
-            "node": "Merge",
+            "node": "Is Incoming !",
             "type": "main",
             "index": 0
           }
@@ -444,7 +371,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "IF4",
             "type": "main",
             "index": 0
           }
@@ -462,7 +389,7 @@
       "main": [
         [
           {
-            "node": "HTTP Request",
+            "node": "IF4",
             "type": "main",
             "index": 0
           }
@@ -480,7 +407,7 @@
         ],
         [
           {
-            "node": "Is Public ?",
+            "node": "Is Private !",
             "type": "main",
             "index": 0
           }
@@ -498,7 +425,69 @@
         ],
         [
           {
-            "node": "From Agent ?",
+            "node": "From Customer !",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF4": {
+      "main": [
+        [
+          {
+            "node": "Send Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Function2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function2": {
+      "main": [
+        [
+          {
+            "node": "Send Attach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Text": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Attach": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "IF",
             "type": "main",
             "index": 0
           }
