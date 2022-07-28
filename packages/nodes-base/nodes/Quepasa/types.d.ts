@@ -24,7 +24,7 @@ export declare namespace Quepasa {
 		active: boolean;
 		id: number;
 		name: string;
-	};	
+	};
 
 	export type Response = {
 		success: boolean;
@@ -44,21 +44,21 @@ export declare namespace Quepasa {
 
 	// --------------------------------------------------------------------------
 	// message:send -> operation:send methods
-	// 	
+	//
 
 	export type SendTextRequest = {
-		recipient: string;
-		message: string;
+		chatid: string;
+		text: string;
 	};
 
 	export type SendAttachmentUrlRequest = {
 		chatid: string;
 		url: string;
 		filename: string;
-		textlabel: string;
+		text: string;
 	};
-	
-	// 
+
+	//
 	// --------------------------------------------------------------------------
 
 	export type Group = Organization;

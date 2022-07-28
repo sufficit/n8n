@@ -48,12 +48,12 @@ export async function resourceMessage(this: IExecuteFunctions, operation: string
 
 		items[i] = newItem;
 
-		const fileName = this.getNodeParameter('fileName', i) as string;		
+		const fileName = this.getNodeParameter('fileName', i) as string;
 		const binaryData = await this.helpers.prepareBinaryData(responseData.data, fileName || "unknownFileName");
-		
+
 		const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
 		items[i].binary![binaryPropertyName] = binaryData;
-	} 
+	}
 	else if (operation === 'send'){
 		const method = this.getNodeParameter('method', i) as string;
 		const Recipient = this.getNodeParameter('recipient', i) as string;
@@ -63,33 +63,33 @@ export async function resourceMessage(this: IExecuteFunctions, operation: string
 			'X-QUEPASA-TRACKID': TrackId
 		};
 
-		if (method === 'sendtext') {					
-			const Message = this.getNodeParameter('text', i) as string;	
+		if (method === 'sendtext') {
+			const Message = this.getNodeParameter('text', i) as string;
 			let body: Quepasa.SendTextRequest = {
-				message: Message,
-				recipient: Recipient,
+				text: Message,
+				chatid: Recipient,
 			};
-			responseData = await apiRequest.call(this, 'POST', '/sendtext', body, {}, undefined, headers);			
-		} 
+			responseData = await apiRequest.call(this, 'POST', '/sendtext', body, {}, undefined, headers);
+		}
 		else if (method === 'sendurl') {
 			const Url = this.getNodeParameter('url', i) as string;
-			const FileName = this.getNodeParameter('filename', i) as string;			
+			const FileName = this.getNodeParameter('filename', i) as string;
 			const Label = this.getNodeParameter('label', i) as string;
 			let body: Quepasa.SendAttachmentUrlRequest = {
 				chatid: Recipient,
 				url: Url,
-				textlabel: Label,
+				text: Label,
 				filename: FileName,
 			};
-			responseData = await apiRequest.call(this, 'POST', '/sendurl', body, {}, undefined, headers);	
-		}	
-	} 
+			responseData = await apiRequest.call(this, 'POST', '/sendurl', body, {}, undefined, headers);
+		}
+	}
 	else if (operation === 'where') {
 
-	} 
-	else if (operation === 'find') {
-		
 	}
-			
+	else if (operation === 'find') {
+
+	}
+
 	return responseData;
 }
