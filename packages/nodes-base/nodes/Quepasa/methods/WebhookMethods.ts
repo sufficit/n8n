@@ -48,23 +48,23 @@ export async function resourceWebhook(this: IExecuteFunctions, operation: string
 
 		items[i] = newItem;
 
-		const fileName = this.getNodeParameter('fileName', i) as string;		
+		const fileName = this.getNodeParameter('fileName', i) as string;
 		const binaryData = await this.helpers.prepareBinaryData(responseData.data, fileName || "unknownFileName");
-		
+
 		const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
 		items[i].binary![binaryPropertyName] = binaryData;
-	} 
+	}
 	else if (operation === 'send'){
 		const method = this.getNodeParameter('method', i) as string;
 		if (method === 'sendtext') {
 			const Message = this.getNodeParameter('text', i) as string;
 			const Recipient = this.getNodeParameter('recipient', i) as string;
 			let request: Quepasa.SendTextRequest = {
-				message: Message,
-				recipient: Recipient,
+				text: Message,
+				chatid: Recipient,
 			};
 
-			responseData = await apiRequest.call(this, 'POST', '/sendtext', request);			
+			responseData = await apiRequest.call(this, 'POST', '/sendtext', request);
 		}
 	} else if (operation === 'sendurl') {
 		const method = this.getNodeParameter('method', i) as string;
@@ -72,13 +72,13 @@ export async function resourceWebhook(this: IExecuteFunctions, operation: string
 			const Message = this.getNodeParameter('text', i) as string;
 			const Recipient = this.getNodeParameter('recipient', i) as string;
 			let request: Quepasa.SendTextRequest = {
-				message: Message,
-				recipient: Recipient,
+				text: Message,
+				chatid: Recipient,
 			};
 
-			responseData = await apiRequest.call(this, 'POST', '/sendtext', request);			
+			responseData = await apiRequest.call(this, 'POST', '/sendtext', request);
 		}
 	}
-			
+
 	return responseData;
 }
