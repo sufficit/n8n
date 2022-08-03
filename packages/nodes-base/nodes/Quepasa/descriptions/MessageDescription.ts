@@ -30,7 +30,7 @@ export const messageDescription: INodeProperties[] = [
 				name: 'Download',
 				value: 'download',
 				description: 'Download a message attachment',
-			},			
+			},
 			{
 				name: 'Send',
 				value: 'send',
@@ -44,7 +44,7 @@ export const messageDescription: INodeProperties[] = [
 export const messageFields: INodeProperties[] = [
 	// --------------------------------------------------------------------------
 	// message:get -> operation:where
-	// --------------------------------------------------------------------------	
+	// --------------------------------------------------------------------------
 	{
 		displayName: 'Return All',
 		name: 'returnAll',
@@ -89,7 +89,7 @@ export const messageFields: INodeProperties[] = [
 
 	// --------------------------------------------------------------------------
 	// message:get -> operation:find
-	// --------------------------------------------------------------------------	
+	// --------------------------------------------------------------------------
 	{
 		displayName: 'Message Id',
 		name: 'messageId',
@@ -121,7 +121,7 @@ export const messageFields: INodeProperties[] = [
 				],
 				operation: [
 					'download',
-				],				
+				],
 			},
 
 		},
@@ -140,17 +140,17 @@ export const messageFields: INodeProperties[] = [
 				],
 				operation: [
 					'download',
-				],				
+				],
 			},
 
 		},
 		placeholder: 'downloaded.pdf',
 		description: '(Optional) File name to be outputed if setted',
 	},
-	
+
 	// --------------------------------------------------------------------------
 	// message:send -> operation:send
-	// --------------------------------------------------------------------------	
+	// --------------------------------------------------------------------------
 	{
 		displayName: 'Method',
 		name: 'method',
@@ -206,7 +206,7 @@ export const messageFields: INodeProperties[] = [
 		},
 		default: '',
 		description: 'Text message',
-	},	
+	},
 	{
 		displayName: 'Label',
 		name: 'label',
@@ -230,7 +230,7 @@ export const messageFields: INodeProperties[] = [
 	},
 	{
 		displayName: 'Chat Id',
-		name: 'recipient',
+		name: 'chatId',
 		type: 'string',
 		required: true,
 		displayOptions: {

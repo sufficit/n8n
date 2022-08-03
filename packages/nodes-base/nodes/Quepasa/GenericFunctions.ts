@@ -35,9 +35,10 @@ class RequestError extends Error {
 
 export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions, method: string, endpoint: Quepasa.Endpoint = '', body: any = {}, qs: IDataObject = {}, uri?: string, headers: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
 	const credentials = await this.getCredentials('quepasaTokenAuthApi');
+	const token = this.getNodeParameter('token', 0) as string;
 
 	let fullUri = credentials.baseUrl;
-	fullUri = fullUri + `/v3/bot/${credentials.accessToken}${endpoint}`;	
+	fullUri = fullUri + `/v3/bot/${token ?? credentials.accessToken}${endpoint}`;
 
 	const options: OptionsWithUri = {
 		headers: {
@@ -57,7 +58,7 @@ export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoa
 	if (Object.keys(headers).length !== 0) {
 		options.headers = Object.assign({}, options.headers, headers);
 	}
-	
+
 	if (Object.keys(body).length !== 0) {
 		options.body = body;
 	}
@@ -67,14 +68,14 @@ export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoa
 		delete options.qs;
 	}
 
-	try {							
+	try {
 		const responseData = await this.helpers.request!(options);
 		if (endpoint === '/download') {
 			return {
 				data: responseData,
 			};
 		}
-		
+
 		if (responseData.success === false) {
 			throw new NodeApiError(this.getNode(), responseData);
 		}

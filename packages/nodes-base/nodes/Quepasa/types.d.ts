@@ -37,25 +37,23 @@ export declare namespace Quepasa {
 
 	export type Webhook = {
 		url: string;
-		forwardinternal: boolean;
-		trackid: string;
-		success: Date;
+		forwardinternal?: boolean;
+		trackid?: string;
+		success?: Date;
 	}
 
 	// --------------------------------------------------------------------------
 	// message:send -> operation:send methods
 	//
 
-	export type SendTextRequest = {
+	export type SendRequest = {
 		chatid: string;
 		text: string;
 	};
 
-	export type SendAttachmentUrlRequest = {
-		chatid: string;
+	export type SendAttachmentUrlRequest = SendRequest & {
 		url: string;
 		filename: string;
-		text: string;
 	};
 
 	//

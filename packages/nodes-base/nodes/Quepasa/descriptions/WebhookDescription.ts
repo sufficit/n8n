@@ -52,11 +52,47 @@ export const webhookFields: INodeProperties[] = [
 					'webhook',
 				],
 				operation: [
-					'find', 'setup', 'remove',
+					'setup', 'remove',
 				],
 			},
 		},
 		default: false,
 		description: 'Url to trigger events',
+	},
+	{
+		displayName: 'Forward Internal',
+		name: 'forwardInternal',
+		type: 'boolean',
+		default: true,
+		required: false,
+		description: '(Optional) Forward Internal',
+		displayOptions: {
+			show: {
+				resource: [
+					'webhook',
+				],
+				operation: [
+					'setup'
+				],
+			},
+		},
+	},
+	{
+		displayName: 'Track Id',
+		name: 'trackId',
+		type: 'string',
+		default: '',
+		required: false,
+		description: '(Optional) System identifier, avoid duplicated messages',
+		displayOptions: {
+			show: {
+				resource: [
+					'webhook',
+				],
+				operation: [
+					'setup'
+				],
+			},
+		},
 	},
 ];

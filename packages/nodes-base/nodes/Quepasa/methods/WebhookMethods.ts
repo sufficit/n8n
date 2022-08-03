@@ -28,56 +28,29 @@ import type { Quepasa } from '../types';
 
 export async function resourceWebhook(this: IExecuteFunctions, operation: string, items: any, i: number): Promise<any> {
 	let responseData;
-	if (operation === 'download') {
-		const qs: IDataObject = {};
-		const objectId = this.getNodeParameter('messageId', i) as string;
-		qs.id = objectId;
-		responseData = await apiRequest.call(this, 'GET', '/download', {}, qs);
-
-		const newItem: INodeExecutionData = {
-			json: items[i].json,
-			binary: {},
-		};
-
-		if (items[i].binary !== undefined) {
-			// Create a shallow copy of the binary data so that the old
-			// data references which do not get changed still stay behind
-			// but the incoming data does not get changed.
-			Object.assign(newItem.binary, items[i].binary);
-		}
-
-		items[i] = newItem;
-
-		const fileName = this.getNodeParameter('fileName', i) as string;
-		const binaryData = await this.helpers.prepareBinaryData(responseData.data, fileName || "unknownFileName");
-
-		const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
-		items[i].binary![binaryPropertyName] = binaryData;
+	if (operation === 'find') {
+		responseData = await apiRequest.call(this, 'GET', '/webhook');
 	}
-	else if (operation === 'send'){
-		const method = this.getNodeParameter('method', i) as string;
-		if (method === 'sendtext') {
-			const Message = this.getNodeParameter('text', i) as string;
-			const Recipient = this.getNodeParameter('recipient', i) as string;
-			let request: Quepasa.SendTextRequest = {
-				text: Message,
-				chatid: Recipient,
-			};
-
-			responseData = await apiRequest.call(this, 'POST', '/sendtext', request);
-		}
-	} else if (operation === 'sendurl') {
-		const method = this.getNodeParameter('method', i) as string;
-		if (method === 'sendtext') {
-			const Message = this.getNodeParameter('text', i) as string;
-			const Recipient = this.getNodeParameter('recipient', i) as string;
-			let request: Quepasa.SendTextRequest = {
-				text: Message,
-				chatid: Recipient,
-			};
-
-			responseData = await apiRequest.call(this, 'POST', '/sendtext', request);
-		}
+	else if (operation === 'setup'){
+		const WebhookUrl = this.getNodeParameter('url', i) as string;
+		const ForwardInternal = this.getNodeParameter('forwardInternal', i) as boolean;
+		const TrackId = this.getNodeParameter('trackId', i) as string;
+		let body: Quepasa.Webhook = {
+			url: WebhookUrl,
+			forwardinternal: ForwardInternal,
+			trackid: TrackId,
+		};
+		responseData = await apiRequest.call(this, 'POST', '/webhook', body);
+	}
+	else if (operation === 'remove') {
+		const WebhookUrl = this.getNodeParameter('url', i) as string;
+		let body: Quepasa.Webhook = {
+			url: WebhookUrl,
+		};
+		responseData = await apiRequest.call(this, 'DELETE', '/webhook', body);
+	}
+	else if (operation === 'clear') {
+		responseData = await apiRequest.call(this, 'DELETE', '/webhook');
 	}
 
 	return responseData;

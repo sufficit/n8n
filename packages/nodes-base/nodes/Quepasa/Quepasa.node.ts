@@ -50,10 +50,25 @@ export class Quepasa implements INodeType {
 				{
 					name: 'quepasaTokenAuthApi',
 					testedBy: 'quepasaTokenAuthApiTest',
-					required: true,
+					required: false,
 				},
 			],
 			properties: [
+				{
+					displayName: 'Token',
+					name: 'token',
+					type: 'string',
+					default: '',
+					required: false,
+					description: '(Optional) Token of Whatsapp bot, override credentials',
+					displayOptions: {
+						show: {
+							credentials: [
+								null,
+							],
+						},
+					},
+				},
 				{
 					displayName: 'Resource',
 					name: 'resource',
@@ -125,21 +140,21 @@ export class Quepasa implements INodeType {
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
 		const items = this.getInputData();
 		const resource = this.getNodeParameter('resource', 0) as Types.Resource;
-		const operation = this.getNodeParameter('operation', 0) as string;		
+		const operation = this.getNodeParameter('operation', 0) as string;
 		const returnData: IDataObject[] = [];
 
 		for (let i = 0; i < items.length; i++) {
 			let responseData;
 			try {
-				if (resource === 'information'){		
-					responseData = await apiRequest.call(this, 'GET');						
-				} 
+				if (resource === 'information'){
+					responseData = await apiRequest.call(this, 'GET');
+				}
 				else if (resource === 'message') {
 					responseData = await resourceMessage.call(this, operation, items, i)
-				} 
+				}
 				else if (resource === 'webhook') {
 					responseData = await resourceWebhook.call(this, operation, items, i)
-				}					
+				}
 
 				if (Array.isArray(responseData)) {
 					returnData.push.apply(returnData, responseData as IDataObject[]);
