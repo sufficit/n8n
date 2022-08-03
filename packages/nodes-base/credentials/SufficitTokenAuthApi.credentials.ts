@@ -19,15 +19,6 @@ export class SufficitTokenAuthApi implements ICredentialType {
 		},
 	];
 
-	authenticate: IAuthenticateGeneric = {
-		type: 'generic',
-		properties: {
-			headers: {
-				Authorization: 'Bearer {{$credentials.accessToken}}',
-			},
-		},
-	};
-
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: 'https://identity.sufficit.com.br',
