@@ -55,6 +55,21 @@ export class Quepasa implements INodeType {
 			],
 			properties: [
 				{
+					displayName: 'BaseUrl',
+					name: 'baseUrl',
+					type: 'string',
+					default: '',
+					required: false,
+					description: '(Optional) Base Url',
+					displayOptions: {
+						show: {
+							authentication: [
+								'',
+							],
+						},
+					},
+				},
+				{
 					displayName: 'Token',
 					name: 'token',
 					type: 'string',
@@ -63,8 +78,8 @@ export class Quepasa implements INodeType {
 					description: '(Optional) Token of Whatsapp bot, override credentials',
 					displayOptions: {
 						show: {
-							credentials: [
-								null,
+							authentication: [
+								'',
 							],
 						},
 					},
