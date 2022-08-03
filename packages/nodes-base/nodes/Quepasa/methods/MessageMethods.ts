@@ -55,40 +55,41 @@ export async function resourceMessage(this: IExecuteFunctions, operation: string
 		items[i].binary![binaryPropertyName] = binaryData;
 	}
 	else if (operation === 'send'){
-		const method = this.getNodeParameter('method', i) as string;
-		const ChatId = this.getNodeParameter('chatId', i) as string;
-		const TrackId = this.getNodeParameter('trackId', i) as string;
+		const Method =	this.getNodeParameter('method', i)		as string;
+		const ChatId =	this.getNodeParameter('chatId', i)		as string;		
+		const Text = 	this.getNodeParameter('text', i, '')	as string;
+		const TrackId = this.getNodeParameter('trackId', i, '') as string;
 
 		const headers: IDataObject = {
 			'X-QUEPASA-TRACKID': TrackId
 		};
 
-		if (method === 'sendtext') {
-			const Message = this.getNodeParameter('text', i) as string;
+		if (Method === 'sendtext') {
 			let body: Quepasa.SendRequest = {
-				text: Message,
+				text: Text,
 				chatid: ChatId,
 			};
 			responseData = await apiRequest.call(this, 'POST', '/sendtext', body, {}, undefined, headers);
 		}
-		else if (method === 'sendurl') {
+		else if (Method === 'sendurl') {
 			const Url = this.getNodeParameter('url', i) as string;
-			const FileName = this.getNodeParameter('filename', i) as string;
-			const Label = this.getNodeParameter('label', i) as string;
+			const FileName = this.getNodeParameter('filename', i, '') as string;
 			let body: Quepasa.SendAttachmentUrlRequest = {
 				chatid: ChatId,
 				url: Url,
-				text: Label,
+				text: Text,
 				filename: FileName,
 			};
 			responseData = await apiRequest.call(this, 'POST', '/sendurl', body, {}, undefined, headers);
+		} else {
+			throw new Error('Method not implemented.');
 		}
 	}
 	else if (operation === 'where') {
-
+		throw new Error('Method not implemented.');
 	}
 	else if (operation === 'find') {
-
+		throw new Error('Method not implemented.');
 	}
 
 	return responseData;

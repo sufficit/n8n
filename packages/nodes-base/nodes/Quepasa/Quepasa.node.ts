@@ -50,25 +50,67 @@ export class Quepasa implements INodeType {
 				{
 					name: 'quepasaTokenAuthApi',
 					testedBy: 'quepasaTokenAuthApiTest',
-					required: false,
+					required: true,
+					displayOptions: {
+						show: {
+							authentication: [
+								'predefinedCredentialType',
+							],
+						},
+					},
 				},
 			],
 			properties: [
+				{
+					displayName: 'Authentication',
+					name: 'authentication',
+					noDataExpression: true,
+					type: 'options',
+					required: true,
+					options: [
+						{
+							name: 'Parameters',
+							value: 'parametersCredentialType',
+						},
+						{
+							name: 'Predefined Quepasa Credentials',
+							value: 'predefinedCredentialType',
+							description: 'BaseUrl + Token',
+						},
+					],
+					default: 'parametersCredentialType',
+				},
 				{
 					displayName: 'BaseUrl',
 					name: 'baseUrl',
 					type: 'string',
 					default: '',
-					required: false,
-					description: '(Optional) Base Url',
+					required: true,
+					description: 'Base Url',
+					placeholder: 'https://api.quepasa.org:31000',
+					displayOptions: {
+						show: {
+							authentication: [
+								'parametersCredentialType',
+							],
+						},
+					},
 				},
 				{
 					displayName: 'Token',
 					name: 'token',
 					type: 'string',
 					default: '',
-					required: false,
-					description: '(Optional) Token of Whatsapp bot, override credentials',
+					required: true,
+					description: 'Token of Whatsapp bot, override credentials',
+					placeholder: '00000000-0000-0000-0000-000000000000',
+					displayOptions: {
+						show: {
+							authentication: [
+								'parametersCredentialType',
+							],
+						},
+					},
 				},
 				{
 					displayName: 'Resource',

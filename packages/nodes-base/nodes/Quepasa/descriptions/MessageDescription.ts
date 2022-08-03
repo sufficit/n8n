@@ -200,33 +200,12 @@ export const messageFields: INodeProperties[] = [
 					'send'
 				],
 				method:[
-					'sendtext'
+					'sendtext', 'sendurl'
 				],
 			},
 		},
 		default: '',
 		description: 'Text message',
-	},
-	{
-		displayName: 'Label',
-		name: 'label',
-		type: 'string',
-		required: false,
-		displayOptions: {
-			show: {
-				resource: [
-					'message',
-				],
-				operation: [
-					'send'
-				],
-				method:[
-					'sendurl', 'sendbinary', 'sendencoded'
-				],
-			},
-		},
-		default: '',
-		description: 'Label for images',
 	},
 	{
 		displayName: 'Chat Id',
