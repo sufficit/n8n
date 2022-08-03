@@ -34,13 +34,16 @@ class RequestError extends Error {
 }
 
 export async function apiRequest(this: IHookFunctions | IExecuteFunctions | ILoadOptionsFunctions, method: string, endpoint: Quepasa.Endpoint = '', body: any = {}, qs: IDataObject = {}, uri?: string, headers: IDataObject = {}): Promise<any> { // tslint:disable-line:no-any
-	const credentials = await this.getCredentials('quepasaTokenAuthApi');
-	const baseUrl = this.getNodeParameter('baseUrl', 0, '') as string;
-	const token = this.getNodeParameter('token', 0, '') as string;
+	let baseUrl = this.getNodeParameter('baseUrl', 0, '') as string;
+	let token = this.getNodeParameter('token', 0, '') as string;
 
-	let fullUri = baseUrl || credentials.baseUrl;
-	fullUri = fullUri + `/v3/bot/${token || credentials.accessToken}${endpoint}`;
+	if (!baseUrl || !token) {
+		const credentials = await this.getCredentials('quepasaTokenAuthApi') as Quepasa.PathCredentials;
+		baseUrl = baseUrl || credentials.baseUrl;
+		token = token || credentials.accessToken;
+	}
 
+	let fullUri = baseUrl + `/v3/bot/${token}${endpoint}`;
 	const options: OptionsWithUri = {
 		headers: {
 			Accept: 'application/json',
