@@ -190,7 +190,7 @@ export const messageFields: INodeProperties[] = [
 		displayName: 'Text',
 		name: 'text',
 		type: 'string',
-		required: true,
+		required: false,
 		displayOptions: {
 			show: {
 				resource: [
