@@ -28,6 +28,7 @@ export async function invoiceNinjaApiRequest(
 		headers: {
 			Accept: 'application/json',
 			'X-Ninja-Token': credentials.apiToken,
+			'X-API-Token': credentials.apiToken,
 		},
 		method,
 		qs: query,

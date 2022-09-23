@@ -1,0 +1,502 @@
+{
+  "name": "(+5511953259249) From ChatWoot to Quepasa",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [
+        80,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "f1e9aab8-71a6-4853-b648-bf41f2b5a93f",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "name": "From ChatWoot",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        80,
+        700
+      ],
+      "webhookId": "f1e9aab8-71a6-4853-b648-bf41f2b5a93f"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"body\"][\"event\"]}}",
+              "value2": "message_created"
+            }
+          ]
+        }
+      },
+      "name": "IF",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        320,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "String.prototype.hexDecode = function(){\n    var j;\n    var hexes = this.match(/.{1,4}/g) || [];\n    var back = \"\";\n    for(j = 0; j<hexes.length; j++) {\n        back += String.fromCharCode(parseInt(hexes[j], 16));\n    }\n\n    return back;\n}\n\nfunction hex2a(hexx) {\n    var hex = hexx.toString();//force conversion\n    var str = '';\n    for (var i = 0; i < hex.length; i += 2)\n        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));\n    return str;\n}\n\nlet body = items.shift().json[\"body\"];\nif(body){\n  let chatId = body.conversation.contact_inbox.source_id;\n  if(chatId){\n    body.conversation.contact_inbox.source_id = hex2a(chatId); //chatId.hexDecode();\n  }\n  return body;\n}\nreturn {};"
+      },
+      "name": "Function1",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1400,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "noData",
+        "options": {
+          "responseCode": 200
+        }
+      },
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        2780,
+        320
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"body\"][\"message_type\"]}}",
+              "value2": "outgoing"
+            }
+          ]
+        }
+      },
+      "name": "IF1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        560,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{$json[\"content_type\"]}}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "text",
+              "output": 1
+            }
+          ]
+        },
+        "fallbackOutput": 0
+      },
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "content",
+              "value": "=*{{$json[\"sender\"][\"name\"]}}*: {{$json[\"content\"]}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Update Content With Sender Name",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        1820,
+        580
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"body\"][\"private\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "IF2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        840,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": true,
+              "value2": "={{$json[\"body\"][\"sender\"][\"type\"] == \"user\"}}"
+            }
+          ]
+        }
+      },
+      "name": "IF3",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        1100,
+        540
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json[\"conversation\"][\"messages\"][0][\"attachments\"]}}",
+              "operation": "isEmpty"
+            }
+          ]
+        }
+      },
+      "name": "IF4",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        2040,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "functionCode": "let response = [];\n\nfor (item of items) {\n  let attachs = item.json.conversation.messages.shift().attachments;\n  for(attach of attachs){\n    response.push({\n      recipient: item.json.conversation.contact_inbox.source_id,\n      url: attach.data_url\n    })\n  }\n}\n\nreturn response;"
+      },
+      "name": "Function2",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "text": "={{$json[\"content\"]}}",
+        "recipient": "={{$json[\"conversation\"][\"contact_inbox\"][\"source_id\"]}}",
+        "trackId": "chatwoot"
+      },
+      "name": "Send Text",
+      "type": "n8n-nodes-base.quepasa",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        320
+      ],
+      "credentials": {
+        "quepasaTokenAuthApi": {
+          "id": "1",
+          "name": "(+5511953259249) Quepasa Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "sendurl",
+        "recipient": "={{$json[\"recipient\"]}}",
+        "url": "={{$json[\"url\"]}}",
+        "trackId": "chatwoot"
+      },
+      "name": "Send Attach",
+      "type": "n8n-nodes-base.quepasa",
+      "typeVersion": 1,
+      "position": [
+        2560,
+        560
+      ],
+      "credentials": {
+        "quepasaTokenAuthApi": {
+          "id": "1",
+          "name": "(+5511953259249) Quepasa Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "only for messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "Not Message Created Event !",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        540,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "only for outbound messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "Is Incoming !",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        800,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "do not forwarding private messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "Is Private !",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1040,
+        820
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "do not forwarding bot messages",
+        "options": {
+          "responseCode": 204
+        }
+      },
+      "name": "From Customer !",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        1280,
+        820
+      ]
+    }
+  ],
+  "connections": {
+    "From ChatWoot": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF": {
+      "main": [
+        [
+          {
+            "node": "IF1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Not Message Created Event !",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function1": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF1": {
+      "main": [
+        [
+          {
+            "node": "IF2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Incoming !",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "IF4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Update Content With Sender Name",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Content With Sender Name": {
+      "main": [
+        [
+          {
+            "node": "IF4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF2": {
+      "main": [
+        [
+          {
+            "node": "IF3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Is Private !",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF3": {
+      "main": [
+        [
+          {
+            "node": "Function1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "From Customer !",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF4": {
+      "main": [
+        [
+          {
+            "node": "Send Text",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Function2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function2": {
+      "main": [
+        [
+          {
+            "node": "Send Attach",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Text": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Attach": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "IF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "id": 3,
+  "tags": []
+}
